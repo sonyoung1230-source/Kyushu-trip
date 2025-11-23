@@ -48,7 +48,7 @@
             overflow-y: auto;
             z-index: 10;
             flex-shrink: 0;
-            padding-bottom: 20px; /* 底部留白 */
+            padding-bottom: 20px;
         }
 
         .sidebar-header {
@@ -65,7 +65,9 @@
             text-align: center;
             margin-top: 5px;
             background: rgba(255,255,255,0.05);
-            padding: 2px 0;
+            padding: 4px 0;
+            border-radius: 4px;
+            margin: 10px 5px;
         }
         .cnt-num { color: var(--gold); font-weight: bold; font-size: 0.9rem; }
 
@@ -207,7 +209,7 @@
     <script>
         const apiKey = '8e5674ecc7d8d72c4090fd64fcd2be3d'; 
 
-        // ★★★ 資料庫 (已加入 map: 'Google搜尋關鍵字') ★★★
+        // ★★★ 資料庫 (本地圖片 + 導航) ★★★
         const tripData = [
             {
                 day: "Day 1", date: "2/20 (五)",
@@ -219,7 +221,7 @@
                 timeline: [
                     { time: "15:25", act: "高雄起飛 (虎航 IT270)", map: "" },
                     { time: "18:55", act: "抵達福岡機場", map: "福岡機場" },
-                    { time: "20:30", act: "民宿 Check-in", map: "博多站" }, // 預設導航到博多站附近
+                    { time: "20:30", act: "民宿 Check-in", map: "博多站" }, 
                     { time: "21:00", act: "中洲屋台美食體驗", map: "中洲屋台" }
                 ]
             },
@@ -303,18 +305,27 @@
         const weatherTitle = document.getElementById('weather-loc-name');
         const forecastContainer = document.getElementById('forecast-list');
 
-        // ★ 倒數計時器邏輯 ★
+        // ★ 優化版倒數計時器邏輯 (iPhone 相容) ★
         function updateCountdown() {
-            const tripDate = new Date("2025-02-20T00:00:00").getTime();
+            // 使用斜線格式，避免 iOS 誤判
+            const tripStartDate = new Date("2025/02/20 00:00:00").getTime();
+            const tripEndDate = new Date("2025/02/25 23:59:59").getTime(); 
             const now = new Date().getTime();
-            const distance = tripDate - now;
+            
+            const distance = tripStartDate - now;
             const days = Math.ceil(distance / (1000 * 60 * 60 * 24));
             
-            const daysEl = document.getElementById('days-left');
-            if (distance < 0) {
-                document.getElementById('countdown').innerHTML = "旅程<br>進行中";
+            const box = document.getElementById('countdown');
+
+            if (now < tripStartDate) {
+                // 還沒出發
+                box.innerHTML = `距離出發<br><span class="cnt-num">${days}</span> 天`;
+            } else if (now >= tripStartDate && now <= tripEndDate) {
+                // 旅程期間
+                box.innerHTML = `<span style="color:#2ecc71; font-weight:bold; font-size:0.8rem;">旅程<br>進行中 ✈️</span>`;
             } else {
-                daysEl.innerText = days;
+                // 旅程結束
+                box.innerHTML = `<span style="color:#aaa; font-size:0.8rem;">旅程<br>圓滿結束 ❤️</span>`;
             }
         }
 
@@ -347,7 +358,6 @@
 
             let html = '';
             data.timeline.forEach(t => {
-                // ★ 自動生成 Google Map 按鈕 ★
                 let mapBtn = '';
                 if(t.map) {
                     mapBtn = `<a href="https://www.google.com/maps/search/?api=1&query=${t.map}" target="_blank" class="map-btn"><i class="fas fa-location-arrow"></i> 導航</a>`;
