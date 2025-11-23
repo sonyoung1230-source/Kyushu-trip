@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>九州深度旅儀表板</title>
     
-    <!-- ★ 設定 App 圖示 (請確認你有上傳 icon.png) ★ -->
+    <!-- ★ 設定 App 圖示 ★ -->
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
     
@@ -209,7 +209,7 @@
     <script>
         const apiKey = '8e5674ecc7d8d72c4090fd64fcd2be3d'; 
 
-        // ★★★ 資料庫 (本地圖片 + 導航) ★★★
+        // ★★★ 資料庫 ★★★
         const tripData = [
             {
                 day: "Day 1", date: "2/20 (五)",
@@ -305,11 +305,11 @@
         const weatherTitle = document.getElementById('weather-loc-name');
         const forecastContainer = document.getElementById('forecast-list');
 
-        // ★ 優化版倒數計時器邏輯 (iPhone 相容) ★
+        // ★★★ 關鍵修正：年份改為 2026 ★★★
         function updateCountdown() {
-            // 使用斜線格式，避免 iOS 誤判
-            const tripStartDate = new Date("2025/02/20 00:00:00").getTime();
-            const tripEndDate = new Date("2025/02/25 23:59:59").getTime(); 
+            // 設定為 2026 年
+            const tripStartDate = new Date("2026/02/20 00:00:00").getTime();
+            const tripEndDate = new Date("2026/02/25 23:59:59").getTime(); 
             const now = new Date().getTime();
             
             const distance = tripStartDate - now;
