@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="referrer" content="no-referrer">
-    <!-- 讓網頁變成 App 模式的關鍵設定 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>九州深度旅儀表板</title>
+    <title>九州深度旅儀表板 2026</title> <!-- 改標題強制更新 -->
     
-    <!-- ★ 設定 App 圖示 ★ -->
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
     
@@ -17,182 +15,56 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* ========== 全局設定 ========== */
-        :root {
-            --gold: #e0c097;
-            --dark-blue: #1e2a38;
-            --text-main: #ffffff;
-            --text-sub: #b0b8c1;
-        }
-
+        :root { --gold: #e0c097; --dark-blue: #1e2a38; --text-main: #ffffff; --text-sub: #b0b8c1; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        body {
-            font-family: 'Noto Sans TC', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #111;
-            color: var(--text-main);
-            height: 100vh;
-            display: flex;
-            overflow: hidden;
-        }
-
-        /* 左側導覽列 */
-        .sidebar {
-            width: 90px;
-            background: #161b22;
-            border-right: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            z-index: 10;
-            flex-shrink: 0;
-            padding-bottom: 20px;
-        }
-
-        .sidebar-header {
-            padding: 20px 0;
-            text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
+        body { font-family: 'Noto Sans TC', sans-serif; margin: 0; padding: 0; background-color: #111; color: var(--text-main); height: 100vh; display: flex; overflow: hidden; }
+        .sidebar { width: 90px; background: #161b22; border-right: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; overflow-y: auto; z-index: 10; flex-shrink: 0; padding-bottom: 20px; }
+        .sidebar-header { padding: 20px 0; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .sidebar-header h1 { font-size: 0.9rem; color: var(--gold); margin: 0; letter-spacing: 1px; }
-
-        /* 倒數計時器樣式 */
-        .countdown-box {
-            font-size: 0.7rem;
-            color: #aaa;
-            text-align: center;
-            margin-top: 5px;
-            background: rgba(255,255,255,0.05);
-            padding: 4px 0;
-            border-radius: 4px;
-            margin: 10px 5px;
-        }
+        .countdown-box { font-size: 0.7rem; color: #aaa; text-align: center; margin-top: 5px; background: rgba(255,255,255,0.05); padding: 4px 0; border-radius: 4px; margin: 10px 5px; }
         .cnt-num { color: var(--gold); font-weight: bold; font-size: 0.9rem; }
-
-        .nav-btn {
-            padding: 20px 5px;
-            background: transparent;
-            border: none;
-            color: var(--text-sub);
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            border-left: 3px solid transparent;
-        }
-
+        .nav-btn { padding: 20px 5px; background: transparent; border: none; color: var(--text-sub); cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 6px; border-left: 3px solid transparent; }
         .nav-btn i { font-size: 1.2rem; }
         .nav-btn span { font-size: 0.75rem; font-weight: 500; }
         .nav-btn .date-tag { font-size: 0.6rem; opacity: 0.6; }
         .nav-btn.active { background: rgba(224, 192, 151, 0.1); color: var(--gold); border-left-color: var(--gold); }
-
-        /* 右側主畫面 */
-        .main-content {
-            flex: 1;
-            position: relative;
-            overflow-y: auto;
-            background-color: var(--dark-blue);
-            background: linear-gradient(135deg, #1e2a38 0%, #0f141a 100%);
-        }
-
-        /* 背景圖層 */
-        .bg-image-layer {
-            position: fixed;
-            top: 0; left: 90px; right: 0; bottom: 0;
-            background-size: cover;
-            background-position: center;
-            transition: opacity 0.5s ease;
-            opacity: 0.6;
-            z-index: 0;
-        }
-        
-        /* 內容遮罩 */
-        .content-overlay {
-            position: relative;
-            z-index: 1;
-            min-height: 100%;
-            background: linear-gradient(to right, rgba(15,20,26,0.95) 0%, rgba(15,20,26,0.6) 100%);
-            padding: 30px;
-            padding-bottom: 100px;
-        }
-
+        .main-content { flex: 1; position: relative; overflow-y: auto; background-color: var(--dark-blue); background: linear-gradient(135deg, #1e2a38 0%, #0f141a 100%); }
+        .bg-image-layer { position: fixed; top: 0; left: 90px; right: 0; bottom: 0; background-size: cover; background-position: center; transition: opacity 0.5s ease; opacity: 0.6; z-index: 0; }
+        .content-overlay { position: relative; z-index: 1; min-height: 100%; background: linear-gradient(to right, rgba(15,20,26,0.95) 0%, rgba(15,20,26,0.6) 100%); padding: 30px; padding-bottom: 100px; }
         .page-header { margin-bottom: 30px; animation: slideDown 0.5s ease; }
         .day-badge { background: var(--gold); color: #111; padding: 4px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: 700; }
         .page-title { font-size: 2rem; margin: 10px 0 5px; text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         .page-desc { color: #ccc; max-width: 600px; line-height: 1.6; font-size: 0.95rem; }
-
-        /* 天氣條 */
-        .weather-strip {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(255,255,255,0.1);
-            max-width: 800px;
-        }
+        .weather-strip { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 12px; padding: 15px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.1); max-width: 800px; }
         .weather-title { font-size: 0.85rem; color: var(--gold); margin-bottom: 10px; display: flex; justify-content: space-between; }
         .forecast-container { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
         .forecast-item { min-width: 70px; text-align: center; background: rgba(0,0,0,0.2); padding: 8px 5px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; }
         .fc-date { font-size: 0.7rem; color: #aaa; }
         .fc-temp { font-size: 0.9rem; font-weight: bold; color: #fff; }
-
-        /* 時間軸 */
         .timeline { list-style: none; padding: 0; margin: 0; max-width: 600px; animation: fadeIn 0.8s ease; }
         .timeline-item { position: relative; padding-left: 30px; padding-bottom: 30px; border-left: 1px dashed rgba(255,255,255,0.2); }
         .timeline-item:last-child { border: none; }
         .timeline-item::before { content: ''; position: absolute; left: -6px; top: 0; width: 12px; height: 12px; background: var(--gold); border-radius: 50%; box-shadow: 0 0 10px rgba(224, 192, 151, 0.4); }
-        
         .tl-time { color: var(--gold); font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 5px; }
         .tl-content { display: flex; flex-direction: column; gap: 4px; }
         .tl-act { font-size: 1.05rem; color: #eee; line-height: 1.5; }
-
-        /* 導航按鈕樣式 */
-        .map-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: rgba(52, 152, 219, 0.2);
-            color: #3498db;
-            border: 1px solid rgba(52, 152, 219, 0.4);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            text-decoration: none;
-            width: fit-content;
-            margin-top: 5px;
-            transition: 0.2s;
-        }
+        .map-btn { display: inline-flex; align-items: center; gap: 5px; background: rgba(52, 152, 219, 0.2); color: #3498db; border: 1px solid rgba(52, 152, 219, 0.4); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; text-decoration: none; width: fit-content; margin-top: 5px; transition: 0.2s; }
         .map-btn:hover { background: #3498db; color: #fff; }
         .map-btn i { font-size: 0.7rem; }
-
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-
-        @media (min-width: 768px) {
-            .sidebar { width: 200px; }
-            .bg-image-layer { left: 200px; }
-            .nav-btn { flex-direction: row; padding-left: 30px; text-align: left; }
-            .nav-btn i { margin-right: 10px; width: 20px; text-align: center;}
-            .content-overlay { padding-left: 50px; }
-        }
+        @media (min-width: 768px) { .sidebar { width: 200px; } .bg-image-layer { left: 200px; } .nav-btn { flex-direction: row; padding-left: 30px; text-align: left; } .nav-btn i { margin-right: 10px; width: 20px; text-align: center;} .content-overlay { padding-left: 50px; } }
     </style>
 </head>
 <body>
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h1>KYUSHU<br>TRAVEL</h1>
-            <!-- 倒數計時器 -->
+            <!-- 這裡我改成了 2026，讓你一眼就能確認是否更新成功 -->
+            <h1>KYUSHU<br>TRAVEL 2026</h1>
             <div class="countdown-box" id="countdown">
                 距離出發<br><span class="cnt-num" id="days-left">0</span> 天
             </div>
         </div>
-        <!-- 按鈕區 -->
     </nav>
     <main class="main-content">
         <div id="bg-layer" class="bg-image-layer"></div>
@@ -209,15 +81,11 @@
     <script>
         const apiKey = '8e5674ecc7d8d72c4090fd64fcd2be3d'; 
 
-        // ★★★ 資料庫 ★★★
         const tripData = [
             {
-                day: "Day 1", date: "2/20 (五)",
-                title: "福岡・屋台之夜",
+                day: "Day 1", date: "2/20 (五)", title: "福岡・屋台之夜",
                 desc: "抵達福岡，感受九州門戶的繁華。夜晚一定要去中洲屋台，體驗在河畔小攤吃拉麵的獨特氛圍。",
-                imgBase: "1", // 讀取 1.jpg
-                icon: "fa-plane",
-                city: "Fukuoka", cityName: "福岡 Fukuoka",
+                imgBase: "1", icon: "fa-plane", city: "Fukuoka", cityName: "福岡 Fukuoka",
                 timeline: [
                     { time: "15:25", act: "高雄起飛 (虎航 IT270)", map: "" },
                     { time: "18:55", act: "抵達福岡機場", map: "福岡機場" },
@@ -226,12 +94,9 @@
                 ]
             },
             {
-                day: "Day 2", date: "2/21 (六)",
-                title: "門司港・夕陽絕景",
+                day: "Day 2", date: "2/21 (六)", title: "門司港・夕陽絕景",
                 desc: "前往北九州，漫步在充滿大正浪漫風情的門司港車站。下午造訪宮地嶽神社，朝聖光之道。",
-                imgBase: "2", // 讀取 2.jpg
-                icon: "fa-archway",
-                city: "Kitakyushu", cityName: "北九州 Kitakyushu",
+                imgBase: "2", icon: "fa-archway", city: "Kitakyushu", cityName: "北九州 Kitakyushu",
                 timeline: [
                     { time: "08:03", act: "博多站出發 → 門司港", map: "博多站" },
                     { time: "09:00", act: "唐戶市場吃海鮮", map: "唐戶市場" },
@@ -241,12 +106,9 @@
                 ]
             },
             {
-                day: "Day 3", date: "2/22 (日)",
-                title: "由布院・黑川秘湯",
+                day: "Day 3", date: "2/22 (日)", title: "由布院・黑川秘湯",
                 desc: "租車自駕，享受由布院金鱗湖的晨霧，晚上入住深山秘境黑川溫泉。",
-                imgBase: "3", // 讀取 3.jpg
-                icon: "fa-car",
-                city: "Yufu", cityName: "由布院/黑川",
+                imgBase: "3", icon: "fa-car", city: "Yufu", cityName: "由布院/黑川",
                 timeline: [
                     { time: "09:00", act: "取車自駕出發", map: "博多租車" },
                     { time: "10:20", act: "久留米採草莓", map: "久留米 草莓園" },
@@ -256,12 +118,9 @@
                 ]
             },
             {
-                day: "Day 4", date: "2/23 (一)",
-                title: "阿蘇火山・高千穗",
+                day: "Day 4", date: "2/23 (一)", title: "阿蘇火山・高千穗",
                 desc: "見證阿蘇火山的壯闊，下午深入神話發源地高千穗峽。",
-                imgBase: "4", // 讀取 4.jpg
-                icon: "fa-mountain",
-                city: "Aso", cityName: "阿蘇 Aso",
+                imgBase: "4", icon: "fa-mountain", city: "Aso", cityName: "阿蘇 Aso",
                 timeline: [
                     { time: "10:00", act: "阿蘇山觀光 (大觀峰)", map: "阿蘇大觀峰" },
                     { time: "11:30", act: "火山口參觀", map: "阿蘇中岳火山口" },
@@ -270,12 +129,9 @@
                 ]
             },
             {
-                day: "Day 5", date: "2/24 (二)",
-                title: "山鹿・熊本城",
+                day: "Day 5", date: "2/24 (二)", title: "山鹿・熊本城",
                 desc: "參觀歷史悠久的熊本城，天守閣的壯麗不容錯過。",
-                imgBase: "5", // 讀取 5.jpg
-                icon: "fa-landmark",
-                city: "Kumamoto", cityName: "熊本 Kumamoto",
+                imgBase: "5", icon: "fa-landmark", city: "Kumamoto", cityName: "熊本 Kumamoto",
                 timeline: [
                     { time: "10:00", act: "山鹿溫泉文化園區", map: "八千代座" },
                     { time: "14:30", act: "鞠智城遺跡", map: "鞠智城" },
@@ -284,12 +140,9 @@
                 ]
             },
             {
-                day: "Day 6", date: "2/25 (三)",
-                title: "再見九州",
+                day: "Day 6", date: "2/25 (三)", title: "再見九州",
                 desc: "帶著滿滿的回憶返回溫暖的家。",
-                imgBase: "6", // 讀取 6.jpg
-                icon: "fa-plane-departure",
-                city: "Kumamoto", cityName: "熊本 Kumamoto",
+                imgBase: "6", icon: "fa-plane-departure", city: "Kumamoto", cityName: "熊本 Kumamoto",
                 timeline: [
                     { time: "09:00", act: "前往熊本機場", map: "阿蘇熊本機場" },
                     { time: "11:55", act: "華航 CI199 起飛", map: "" },
@@ -305,9 +158,8 @@
         const weatherTitle = document.getElementById('weather-loc-name');
         const forecastContainer = document.getElementById('forecast-list');
 
-        // ★★★ 關鍵修正：年份改為 2026 ★★★
         function updateCountdown() {
-            // 設定為 2026 年
+            // ★★★ 設定為 2026 年 ★★★
             const tripStartDate = new Date("2026/02/20 00:00:00").getTime();
             const tripEndDate = new Date("2026/02/25 23:59:59").getTime(); 
             const now = new Date().getTime();
@@ -318,13 +170,10 @@
             const box = document.getElementById('countdown');
 
             if (now < tripStartDate) {
-                // 還沒出發
                 box.innerHTML = `距離出發<br><span class="cnt-num">${days}</span> 天`;
             } else if (now >= tripStartDate && now <= tripEndDate) {
-                // 旅程期間
                 box.innerHTML = `<span style="color:#2ecc71; font-weight:bold; font-size:0.8rem;">旅程<br>進行中 ✈️</span>`;
             } else {
-                // 旅程結束
                 box.innerHTML = `<span style="color:#aaa; font-size:0.8rem;">旅程<br>圓滿結束 ❤️</span>`;
             }
         }
