@@ -25,6 +25,8 @@
             --tip-bg: rgba(243, 156, 18, 0.15);
             --tip-border: #f39c12;
             --modal-bg: #222;
+            --input-bg: rgba(255,255,255,0.1);
+            --danger-color: #e74c3c;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -54,11 +56,10 @@
         }
 
         .sidebar-header {
-            padding: 20px 5px;
+            padding: 20px 0;
             text-align: center;
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        /* 標題字體調整，讓它適合這兩行字 */
         .sidebar-header h1 { font-size: 0.85rem; color: var(--gold); margin: 0; letter-spacing: 1px; line-height: 1.4; }
 
         .countdown-box {
@@ -85,12 +86,21 @@
             align-items: center;
             gap: 6px;
             border-left: 3px solid transparent;
+            width: 100%;
         }
 
         .nav-btn i { font-size: 1.2rem; }
         .nav-btn span { font-size: 0.75rem; font-weight: 500; }
         .nav-btn .date-tag { font-size: 0.6rem; opacity: 0.6; }
         .nav-btn.active { background: rgba(224, 192, 151, 0.1); color: var(--gold); border-left-color: var(--gold); }
+
+        /* 工具按鈕區 */
+        .tool-btn-group {
+            margin-top: auto;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 10px;
+        }
+        #btn-sos.active { background: rgba(231, 76, 60, 0.15); color: #e74c3c; border-left-color: #e74c3c; }
 
         /* 右側主畫面 */
         .main-content {
@@ -120,50 +130,24 @@
             padding-bottom: 100px;
         }
 
+        /* 頁面樣式 */
         .page-header { margin-bottom: 25px; animation: slideDown 0.5s ease; }
         .day-badge { background: var(--gold); color: #111; padding: 4px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: 700; }
         .page-title { font-size: 2rem; margin: 10px 0 5px; text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         .page-desc { color: #ccc; max-width: 600px; line-height: 1.6; font-size: 0.95rem; margin-bottom: 15px;}
 
         .tags-container { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
-        .tag { 
-            background: var(--tag-bg); color: var(--gold); 
-            padding: 4px 10px; border-radius: 20px; 
-            font-size: 0.75rem; border: 1px solid rgba(224, 192, 151, 0.3);
-            display: flex; align-items: center; gap: 5px;
-        }
-
-        .tip-box {
-            background: var(--tip-bg);
-            border-left: 4px solid var(--tip-border);
-            padding: 12px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            color: #ecf0f1;
-            line-height: 1.5;
-            margin-bottom: 25px;
-            max-width: 600px;
-        }
+        .tag { background: var(--tag-bg); color: var(--gold); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; border: 1px solid rgba(224, 192, 151, 0.3); display: flex; align-items: center; gap: 5px;}
+        .tip-box { background: var(--tip-bg); border-left: 4px solid var(--tip-border); padding: 12px; border-radius: 4px; font-size: 0.85rem; color: #ecf0f1; line-height: 1.5; margin-bottom: 25px; max-width: 600px; }
         .tip-title { color: var(--tip-border); font-weight: bold; display: block; margin-bottom: 4px; font-size: 0.8rem; }
 
-        /* 天氣條 */
-        .weather-strip {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(255,255,255,0.1);
-            max-width: 800px;
-        }
+        .weather-strip { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 12px; padding: 15px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.1); max-width: 800px; }
         .weather-title { font-size: 0.85rem; color: var(--gold); margin-bottom: 10px; display: flex; justify-content: space-between; }
         .forecast-container { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
         .forecast-item { min-width: 70px; text-align: center; background: rgba(0,0,0,0.2); padding: 8px 5px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; }
         .fc-date { font-size: 0.7rem; color: #aaa; }
         .fc-temp { font-size: 0.9rem; font-weight: bold; color: #fff; }
 
-        /* 時間軸 */
         .timeline { list-style: none; padding: 0; margin: 0; max-width: 600px; animation: fadeIn 0.8s ease; }
         .timeline-item { position: relative; padding-left: 30px; padding-bottom: 30px; border-left: 1px dashed rgba(255,255,255,0.2); }
         .timeline-item:last-child { border: none; }
@@ -172,68 +156,63 @@
         .tl-content { display: flex; flex-direction: column; gap: 4px; }
         .tl-act { font-size: 1.05rem; color: #eee; line-height: 1.5; }
 
-        /* 按鈕群組設定 */
         .btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px;}
-        .action-btn {
-            display: inline-flex; align-items: center; gap: 5px;
-            padding: 6px 12px; border-radius: 20px; font-size: 0.75rem;
-            text-decoration: none; width: fit-content; transition: 0.2s; cursor: pointer;
-            font-weight: 500;
-        }
-        
-        .map-btn {
-            background: rgba(52, 152, 219, 0.15); color: #5dade2;
-            border: 1px solid rgba(52, 152, 219, 0.3);
-        }
+        .action-btn { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; text-decoration: none; width: fit-content; transition: 0.2s; cursor: pointer; font-weight: 500; }
+        .map-btn { background: rgba(52, 152, 219, 0.15); color: #5dade2; border: 1px solid rgba(52, 152, 219, 0.3); }
         .map-btn:hover { background: #3498db; color: #fff; border-color: #3498db; }
-
-        .link-btn {
-            background: rgba(46, 204, 113, 0.15); color: #58d68d;
-            border: 1px solid rgba(46, 204, 113, 0.3);
-        }
+        .link-btn { background: rgba(46, 204, 113, 0.15); color: #58d68d; border: 1px solid rgba(46, 204, 113, 0.3); }
         .link-btn:hover { background: #2ecc71; color: #fff; border-color: #2ecc71; }
-
-        .info-btn {
-            background: rgba(230, 126, 34, 0.15); color: #f39c12;
-            border: 1px solid rgba(230, 126, 34, 0.3);
-        }
+        .info-btn { background: rgba(230, 126, 34, 0.15); color: #f39c12; border: 1px solid rgba(230, 126, 34, 0.3); }
         .info-btn:hover { background: #e67e22; color: #fff; border-color: #e67e22; }
 
-        /* ========== 彈出視窗 (Modal) ========== */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
-            z-index: 2000;
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0; visibility: hidden; transition: 0.3s;
-            padding: 20px;
+        /* ========== 記帳樣式 ========== */
+        .budget-container { max-width: 600px; animation: fadeIn 0.5s ease; }
+        .total-card {
+            background: linear-gradient(135deg, #b7950b, #d4af37);
+            padding: 20px; border-radius: 16px; text-align: center;
+            margin-bottom: 20px; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
         }
+        .total-label { font-size: 0.9rem; color: rgba(0,0,0,0.6); font-weight: bold; }
+        .total-amount { font-size: 2.2rem; font-weight: 800; color: #fff; margin: 5px 0; }
+        .total-unit { font-size: 0.9rem; color: rgba(255,255,255,0.8); background: rgba(0,0,0,0.1); padding: 2px 10px; border-radius: 10px; display: inline-block;}
+
+        .budget-form {
+            background: rgba(255,255,255,0.05); padding: 15px;
+            border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
+            display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;
+        }
+        .budget-row { display: flex; gap: 10px; width: 100%; }
+        .budget-input { background: var(--input-bg); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 10px; border-radius: 8px; flex: 1; min-width: 0; }
+        .budget-select { background: var(--input-bg); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 10px; border-radius: 8px; width: 80px; }
+        .add-btn { background: var(--gold); color: #000; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; }
+
+        .expense-list { list-style: none; padding: 0; margin: 0; }
+        .expense-item { background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.05); padding: 12px; display: flex; align-items: center; justify-content: space-between; }
+        .ex-left { display: flex; align-items: center; gap: 10px; }
+        .ex-icon { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--gold); }
+        .ex-info h4 { margin: 0; font-size: 0.95rem; color: #fff; }
+        .ex-info span { font-size: 0.75rem; color: #aaa; }
+        .ex-right { text-align: right; }
+        .ex-price-twd { font-weight: bold; color: #fff; display: block; font-size: 1rem; }
+        .ex-price-jpy { font-size: 0.7rem; color: #888; display: block; }
+        .del-btn { color: #e74c3c; background: none; border: none; cursor: pointer; padding: 10px; margin-left: 10px; font-size: 1.1rem; }
+
+        /* 緊急求助 */
+        .sos-container { max-width: 600px; animation: fadeIn 0.5s ease; }
+        .sos-card { background: rgba(231, 76, 60, 0.1); border: 1px solid rgba(231, 76, 60, 0.3); padding: 20px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
+        .sos-info h3 { margin: 0; color: #e74c3c; font-size: 1.1rem; }
+        .sos-info p { margin: 5px 0 0; color: #ccc; font-size: 0.85rem; }
+        .sos-call-btn { background: #e74c3c; color: white; text-decoration: none; padding: 10px 20px; border-radius: 50px; font-weight: bold; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3); }
+        .sos-call-btn:hover { background: #c0392b; }
+
+        /* Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.3s; padding: 20px; }
         .modal-overlay.show { opacity: 1; visibility: visible; }
-
-        .modal-card {
-            background: var(--modal-bg);
-            width: 100%; max-width: 500px;
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.15);
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-            transform: scale(0.9); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            max-height: 90vh; display: flex; flex-direction: column;
-        }
+        .modal-card { background: var(--modal-bg); width: 100%; max-width: 500px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.15); overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.6); transform: scale(0.9); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-height: 90vh; display: flex; flex-direction: column; }
         .modal-overlay.show .modal-card { transform: scale(1); }
-
         .modal-img-container { height: 220px; overflow: hidden; position: relative; flex-shrink: 0; background: #000; }
         .modal-img { width: 100%; height: 100%; object-fit: cover; }
-        .modal-close {
-            position: absolute; top: 15px; right: 15px;
-            background: rgba(0,0,0,0.5); color: #fff;
-            width: 36px; height: 36px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            border: 1px solid rgba(255,255,255,0.3);
-            cursor: pointer; font-size: 1.2rem;
-            z-index: 10; backdrop-filter: blur(4px);
-        }
-
+        .modal-close { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.5); color: #fff; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.3); cursor: pointer; font-size: 1.2rem; z-index: 10; backdrop-filter: blur(4px); }
         .modal-content { padding: 25px; overflow-y: auto; }
         .modal-title { font-size: 1.4rem; color: var(--gold); margin: 0 0 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; line-height: 1.4; }
         .modal-desc { font-size: 1rem; color: #ddd; line-height: 1.8; text-align: justify; white-space: pre-wrap; }
@@ -258,17 +237,30 @@
                 距離出發<br><span class="cnt-num" id="days-left">0</span> 天
             </div>
         </div>
+        <!-- JS 會在這裡插入 Day 1-6 按鈕 -->
+        
+        <div class="tool-btn-group">
+            <!-- 緊急求助按鈕 -->
+            <button class="nav-btn" id="btn-sos" onclick="loadEmergency()">
+                <i class="fas fa-first-aid"></i>
+                <span>緊急求助</span>
+                <span class="date-tag">SOS</span>
+            </button>
+            <!-- 記帳按鈕 -->
+            <button class="nav-btn" id="btn-budget" onclick="loadBudget()">
+                <i class="fas fa-wallet"></i>
+                <span>記帳助手</span>
+                <span class="date-tag">Expense</span>
+            </button>
+        </div>
     </nav>
+
     <main class="main-content">
         <div id="bg-layer" class="bg-image-layer"></div>
-        <div class="content-overlay">
-            <div id="header-area" class="page-header"></div>
-            <div id="info-area"></div>
-            <div class="weather-strip">
-                <div class="weather-title"><span id="weather-loc-name"></span><span>未來 5 天</span></div>
-                <div class="forecast-container" id="forecast-list"></div>
-            </div>
-            <ul class="timeline" id="timeline-list"></ul>
+        
+        <!-- 內容區 -->
+        <div class="content-overlay" id="main-container">
+            <!-- 動態載入 -->
         </div>
     </main>
 
@@ -288,6 +280,7 @@
 
     <script>
         const apiKey = '8e5674ecc7d8d72c4090fd64fcd2be3d'; 
+        const EXCHANGE_RATE = 0.20; // 匯率設定 1 JPY = 0.20 TWD
 
         const tripData = [
             {
@@ -413,18 +406,21 @@
         ];
 
         const sidebar = document.getElementById('sidebar');
-        const headerArea = document.getElementById('header-area');
-        const infoArea = document.getElementById('info-area');
-        const timelineList = document.getElementById('timeline-list');
+        const mainContainer = document.getElementById('main-container');
         const bgLayer = document.getElementById('bg-layer');
-        const weatherTitle = document.getElementById('weather-loc-name');
-        const forecastContainer = document.getElementById('forecast-list');
-
-        // Modal Elements
+        
+        // Modal Control
         const modal = document.getElementById('modal');
         const modalImg = document.getElementById('modal-img');
         const modalTitle = document.getElementById('modal-title');
         const modalDesc = document.getElementById('modal-desc');
+
+        // Budget Data (Migration: Add IDs to legacy data)
+        let expenses = JSON.parse(localStorage.getItem('tripExpenses')) || [];
+        expenses = expenses.map((item, index) => {
+            if (!item.id) item.id = Date.now() + index;
+            return item;
+        });
 
         function updateCountdown() {
             const tripStartDate = new Date("2026/02/20 00:00:00").getTime();
@@ -445,13 +441,14 @@
 
         function init() {
             updateCountdown();
+            const refNode = document.querySelector('.tool-btn-group');
             tripData.forEach((item, index) => {
                 const btn = document.createElement('button');
                 btn.className = 'nav-btn';
                 btn.id = `btn-${index}`;
                 btn.innerHTML = `<i class="fas ${item.icon}"></i><span>${item.day}</span><span class="date-tag">${item.date.split(' ')[0]}</span>`;
                 btn.onclick = () => loadDay(index);
-                sidebar.appendChild(btn);
+                sidebar.insertBefore(btn, refNode);
             });
             loadDay(0);
         }
@@ -469,16 +466,13 @@
         window.closeModal = function() {
             modal.classList.remove('show');
         }
-
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) closeModal();
-        });
+        modal.addEventListener('click', function(e) { if (e.target === modal) closeModal(); });
 
         function loadDay(index) {
             const data = tripData[index];
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(`btn-${index}`).classList.add('active');
-
+            
             const imgPath = data.imgBase + ".jpg";
             bgLayer.style.opacity = 0;
             setTimeout(() => {
@@ -486,53 +480,216 @@
                 bgLayer.style.opacity = 0.6;
             }, 200);
 
-            headerArea.innerHTML = `<span class="day-badge">${data.day} • ${data.date}</span><h2 class="page-title">${data.title}</h2><p class="page-desc">${data.desc}</p>`;
-
             let tagsHtml = data.tags.map(tag => `<span class="tag"><i class="fas fa-thumbs-up"></i> ${tag}</span>`).join('');
             let tipHtml = `<div class="tip-box"><span class="tip-title"><i class="fas fa-lightbulb"></i> 導遊小撇步：</span>${data.tip}</div>`;
-            infoArea.innerHTML = `<div class="tags-container">${tagsHtml}</div>${tipHtml}`;
-
-            let html = '';
+            
+            let timelineHtml = '';
             data.timeline.forEach((t, tIndex) => {
                 let btns = '<div class="btn-group">';
-                
-                if(t.map && t.map !== "") {
-                    btns += `<a href="https://www.google.com/maps/search/?api=1&query=${t.map}" target="_blank" class="action-btn map-btn"><i class="fas fa-location-arrow"></i> 導航</a>`;
-                }
-                
-                if(t.link && t.link !== "") {
-                    btns += `<a href="${t.link}" target="_blank" class="action-btn link-btn"><i class="fas fa-external-link-alt"></i> 官網</a>`;
-                }
-                
-                if(t.info && t.info !== "") {
-                    btns += `<button onclick="openInfo(${index}, ${tIndex})" class="action-btn info-btn"><i class="fas fa-book-open"></i> 介紹</button>`;
-                }
-                
+                if(t.map) btns += `<a href="https://www.google.com/maps/search/?api=1&query=${t.map}" target="_blank" class="action-btn map-btn"><i class="fas fa-location-arrow"></i> 導航</a>`;
+                if(t.link) btns += `<a href="${t.link}" target="_blank" class="action-btn link-btn"><i class="fas fa-external-link-alt"></i> 官網</a>`;
+                if(t.info) btns += `<button onclick="openInfo(${index}, ${tIndex})" class="action-btn info-btn"><i class="fas fa-book-open"></i> 介紹</button>`;
                 btns += '</div>';
-                
-                html += `
-                    <li class="timeline-item">
-                        <span class="tl-time">${t.time}</span>
-                        <div class="tl-content">
-                            <span class="tl-act">${t.act}</span>
-                            ${btns}
-                        </div>
-                    </li>`;
+                timelineHtml += `<li class="timeline-item"><span class="tl-time">${t.time}</span><div class="tl-content"><span class="tl-act">${t.act}</span>${btns}</div></li>`;
             });
-            timelineList.innerHTML = html;
+
+            mainContainer.innerHTML = `
+                <div id="header-area" class="page-header">
+                    <span class="day-badge">${data.day} • ${data.date}</span>
+                    <h2 class="page-title">${data.title}</h2>
+                    <p class="page-desc">${data.desc}</p>
+                </div>
+                <div id="info-area"><div class="tags-container">${tagsHtml}</div>${tipHtml}</div>
+                <div class="weather-strip">
+                    <div class="weather-title"><span id="weather-loc-name"></span><span>未來 5 天</span></div>
+                    <div class="forecast-container" id="forecast-list"></div>
+                </div>
+                <ul class="timeline" id="timeline-list">${timelineHtml}</ul>
+            `;
 
             fetchWeather(data.city, data.cityName);
         }
 
+        // ========== 緊急求助頁面 ==========
+        window.loadEmergency = function() {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-sos').classList.add('active');
+            
+            bgLayer.style.opacity = 0;
+            setTimeout(() => {
+                bgLayer.style.backgroundImage = `linear-gradient(135deg, #2c0b0e, #521010)`;
+                bgLayer.style.opacity = 0.9;
+            }, 200);
+
+            mainContainer.innerHTML = `
+                <div class="sos-container">
+                    <div class="page-header">
+                        <h2 class="page-title" style="color:#e74c3c"><i class="fas fa-first-aid"></i> 緊急求助</h2>
+                        <p class="page-desc">遇到緊急狀況請保持冷靜，點擊按鈕即可直接撥號。</p>
+                    </div>
+                    
+                    <div class="sos-card">
+                        <div class="sos-info"><h3>警察局</h3><p>遇到犯罪、事故、遺失物品</p></div>
+                        <a href="tel:110" class="sos-call-btn"><i class="fas fa-phone-alt"></i> 110</a>
+                    </div>
+
+                    <div class="sos-card">
+                        <div class="sos-info"><h3>救護車 / 消防隊</h3><p>受傷、急病、火災</p></div>
+                        <a href="tel:119" class="sos-call-btn"><i class="fas fa-phone-alt"></i> 119</a>
+                    </div>
+
+                    <div class="sos-card" style="background:rgba(52, 152, 219, 0.1); border-color:#3498db;">
+                        <div class="sos-info">
+                            <h3 style="color:#3498db">台灣駐福岡辦事處</h3>
+                            <p>護照遺失、急難救助<br>福岡市博多區博多駅前2-5-55</p>
+                        </div>
+                        <a href="tel:+81924736655" class="sos-call-btn" style="background:#3498db;"><i class="fas fa-phone-alt"></i> 撥打</a>
+                    </div>
+
+                    <div class="tip-box" style="margin-top:20px;">
+                        <span class="tip-title">💡 備註：</span>
+                        若在深夜或假日遇到緊急狀況，請撥打福岡辦事處緊急聯絡手機：<br>
+                        <a href="tel:+819087653410" style="color:#f39c12; font-weight:bold; text-decoration:none;">+81-90-8765-3410</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ========== 記帳功能 ==========
+        window.loadBudget = function() {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-budget').classList.add('active');
+            
+            bgLayer.style.opacity = 0;
+            setTimeout(() => {
+                bgLayer.style.backgroundImage = `linear-gradient(135deg, #111, #333)`;
+                bgLayer.style.opacity = 0.9;
+            }, 200);
+
+            renderBudgetUI();
+        }
+
+        // 自動匯率換算邏輯
+        window.calcTWD = function() {
+            const jpy = document.getElementById('bg-price').value;
+            if(jpy) {
+                document.getElementById('bg-twd').value = Math.round(jpy * EXCHANGE_RATE);
+            } else {
+                document.getElementById('bg-twd').value = '';
+            }
+        }
+
+        window.calcJPY = function() {
+            const twd = document.getElementById('bg-twd').value;
+            if(twd) {
+                document.getElementById('bg-price').value = Math.round(twd / EXCHANGE_RATE);
+            } else {
+                document.getElementById('bg-price').value = '';
+            }
+        }
+
+        function renderBudgetUI() {
+            // 計算總金額 (台幣)
+            let totalTWD = expenses.reduce((acc, curr) => acc + parseInt(curr.twd), 0);
+            // 計算總金額 (日幣)
+            let totalJPY = expenses.reduce((acc, curr) => acc + parseInt(curr.price), 0);
+            
+            let listHtml = expenses.map((item) => `
+                <li class="expense-item">
+                    <div class="ex-left">
+                        <div class="ex-icon">${getIcon(item.cat)}</div>
+                        <div class="ex-info"><h4>${item.name}</h4><span>${item.cat}</span></div>
+                    </div>
+                    <div class="ex-right">
+                        <span class="ex-price-twd">NT$${parseInt(item.twd).toLocaleString()}</span>
+                        <span class="ex-price-jpy">¥${parseInt(item.price).toLocaleString()}</span>
+                    </div>
+                    <button class="del-btn" onclick="delExpense(${item.id})"><i class="fas fa-trash"></i></button>
+                </li>
+            `).join('');
+
+            mainContainer.innerHTML = `
+                <div class="budget-container">
+                    <div class="page-header">
+                        <h2 class="page-title"><i class="fas fa-wallet"></i> 記帳助手</h2>
+                        <p class="page-desc">即時匯率換算 (1 JPY ≈ ${EXCHANGE_RATE} TWD)</p>
+                    </div>
+                    
+                    <div class="total-card">
+                        <div class="total-label">目前總花費</div>
+                        <div class="total-amount">NT$ ${totalTWD.toLocaleString()}</div>
+                        <div class="total-unit">約 ¥ ${totalJPY.toLocaleString()}</div>
+                    </div>
+
+                    <div class="budget-form">
+                        <input type="text" id="bg-name" class="budget-input" placeholder="品項 (如: 拉麵)" style="width:100%; margin-bottom:10px;">
+                        
+                        <div class="budget-row">
+                            <input type="number" id="bg-price" class="budget-input" placeholder="日幣 (JPY)" oninput="calcTWD()">
+                            <input type="number" id="bg-twd" class="budget-input" placeholder="台幣 (TWD)" oninput="calcJPY()">
+                        </div>
+
+                        <div class="budget-row" style="margin-top:10px;">
+                            <select id="bg-cat" class="budget-select" style="flex:1;">
+                                <option value="食">🍔 食物</option>
+                                <option value="行">🚌 交通</option>
+                                <option value="購">🛍️ 購物</option>
+                                <option value="住">🏨 住宿</option>
+                                <option value="樂">🎡 娛樂</option>
+                            </select>
+                            <button class="add-btn" onclick="addExpense()" style="flex:1;">新增</button>
+                        </div>
+                    </div>
+
+                    <ul class="expense-list">${listHtml}</ul>
+                </div>
+            `;
+        }
+
+        function getIcon(cat) {
+            const map = {'食':'🍔','行':'🚌','購':'🛍️','住':'🏨','樂':'🎡'};
+            return map[cat] || '💰';
+        }
+
+        window.addExpense = function() {
+            const name = document.getElementById('bg-name').value;
+            const price = document.getElementById('bg-price').value; // 日幣
+            const twd = document.getElementById('bg-twd').value;     // 台幣
+            const cat = document.getElementById('bg-cat').value;
+
+            if(!name || !price || !twd) return alert("請輸入完整資訊");
+
+            // 使用 ID 確保資料唯一性
+            expenses.unshift({ 
+                id: Date.now(), 
+                name, price, twd, cat, 
+                date: new Date().toLocaleDateString() 
+            });
+            localStorage.setItem('tripExpenses', JSON.stringify(expenses));
+            renderBudgetUI();
+        }
+
+        window.delExpense = function(id) {
+            if(confirm("確定刪除此筆紀錄？")) {
+                expenses = expenses.filter(item => item.id !== id);
+                localStorage.setItem('tripExpenses', JSON.stringify(expenses));
+                renderBudgetUI();
+            }
+        }
+
         async function fetchWeather(city, cityName) {
-            weatherTitle.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${cityName}`;
-            forecastContainer.innerHTML = `<div style="color:#aaa; font-size:0.8rem; padding:10px;"><i class="fas fa-spinner fa-spin"></i> 讀取中...</div>`;
+            const elTitle = document.getElementById('weather-loc-name');
+            const elList = document.getElementById('forecast-list');
+            if(!elTitle || !elList) return;
+
+            elTitle.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${cityName}`;
+            elList.innerHTML = `<div style="color:#aaa; font-size:0.8rem; padding:10px;"><i class="fas fa-spinner fa-spin"></i> 讀取中...</div>`;
             try {
                 const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric&lang=zh_tw`;
                 const res = await fetch(url);
                 const data = await res.json();
                 if (res.ok) {
-                    forecastContainer.innerHTML = ''; 
+                    elList.innerHTML = ''; 
                     const dailyData = data.list.filter((item) => item.dt_txt.includes("12:00:00"));
                     const listToRender = dailyData.length >= 4 ? dailyData : [data.list[0], data.list[8], data.list[16], data.list[24], data.list[32]];
                     listToRender.forEach(item => {
@@ -540,10 +697,10 @@
                         const div = document.createElement('div');
                         div.className = 'forecast-item';
                         div.innerHTML = `<span class="fc-date">${dateObj.getMonth()+1}/${dateObj.getDate()}</span><img src="http://openweathermap.org/img/w/${item.weather[0].icon}.png" style="width:30px"><span class="fc-temp">${Math.round(item.main.temp)}°</span>`;
-                        forecastContainer.appendChild(div);
+                        elList.appendChild(div);
                     });
-                } else { forecastContainer.innerHTML = `<div style="color:#faa; font-size:0.8rem;">N/A</div>`; }
-            } catch (e) { forecastContainer.innerHTML = `<div style="color:#faa; font-size:0.8rem;">Error</div>`; }
+                } else { elList.innerHTML = `<div style="color:#faa; font-size:0.8rem;">N/A</div>`; }
+            } catch (e) { elList.innerHTML = `<div style="color:#faa; font-size:0.8rem;">Error</div>`; }
         }
 
         init();
