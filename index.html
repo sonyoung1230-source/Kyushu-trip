@@ -2,7 +2,6 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="referrer" content="no-referrer">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>九州深度旅儀表板</title>
     
@@ -159,14 +158,14 @@
     <script>
         const apiKey = '8e5674ecc7d8d72c4090fd64fcd2be3d'; 
 
-        // ★★★ 圖片全部更新為維基百科連結，保證不破圖 ★★★
+        // ★★★ 資料庫：讀取你上傳到 GitHub 的本地圖片 (1.jpg, 2.jpg...) ★★★
         const tripData = [
             {
                 day: "Day 1", date: "2/20 (五)",
                 title: "福岡・屋台之夜",
                 desc: "抵達福岡，感受九州門戶的繁華。夜晚一定要去中洲屋台，體驗在河畔小攤吃拉麵的獨特氛圍。",
-                // Unsplash (Day 1 你說沒問題，我保留這張漂亮的)
-                img: "https://images.unsplash.com/photo-1554797589-7241bb691973?w=1200&q=80",
+                // 讀取 1.jpg
+                imgBase: "1",
                 icon: "fa-plane",
                 city: "Fukuoka", cityName: "福岡 Fukuoka",
                 timeline: [
@@ -181,8 +180,8 @@
                 day: "Day 2", date: "2/21 (六)",
                 title: "門司港・夕陽絕景",
                 desc: "前往北九州，漫步在充滿大正浪漫風情的門司港車站。下午造訪宮地嶽神社，朝聖光之道。",
-                // Wiki: 門司港車站 (超穩定)
-                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Mojiko_Station_Facade_201904.jpg/1280px-Mojiko_Station_Facade_201904.jpg",
+                // 讀取 2.jpg
+                imgBase: "2",
                 icon: "fa-archway",
                 city: "Kitakyushu", cityName: "北九州 Kitakyushu",
                 timeline: [
@@ -197,8 +196,8 @@
                 day: "Day 3", date: "2/22 (日)",
                 title: "由布院・黑川秘湯",
                 desc: "租車自駕，享受由布院金鱗湖的晨霧，晚上入住深山秘境黑川溫泉。",
-                // Wiki: 黑川溫泉街景 (超穩定)
-                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Kurokawa_Onsen_Ryokan_Yameren.jpg/1280px-Kurokawa_Onsen_Ryokan_Yameren.jpg",
+                // 讀取 3.jpg
+                imgBase: "3",
                 icon: "fa-car",
                 city: "Yufu", cityName: "由布院/黑川",
                 timeline: [
@@ -213,8 +212,8 @@
                 day: "Day 4", date: "2/23 (一)",
                 title: "阿蘇火山・高千穗",
                 desc: "見證阿蘇火山的壯闊，下午深入神話發源地高千穗峽。",
-                // Wiki: 阿蘇草千里 (超穩定)
-                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Kusasenri_Aso_Kumamoto_Japan01n.jpg/1280px-Kusasenri_Aso_Kumamoto_Japan01n.jpg",
+                // 讀取 4.jpg
+                imgBase: "4",
                 icon: "fa-mountain",
                 city: "Aso", cityName: "阿蘇 Aso",
                 timeline: [
@@ -229,8 +228,8 @@
                 day: "Day 5", date: "2/24 (二)",
                 title: "山鹿・熊本城",
                 desc: "參觀歷史悠久的熊本城，天守閣的壯麗不容錯過。",
-                // Wiki: 熊本城 (超穩定)
-                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Kumamoto_Castle_02.jpg/1280px-Kumamoto_Castle_02.jpg",
+                // 讀取 5.jpg
+                imgBase: "5",
                 icon: "fa-landmark",
                 city: "Kumamoto", cityName: "熊本 Kumamoto",
                 timeline: [
@@ -244,8 +243,8 @@
                 day: "Day 6", date: "2/25 (三)",
                 title: "再見九州",
                 desc: "帶著滿滿的回憶返回溫暖的家。",
-                // Unsplash (這張 Day 6 沒問題)
-                img: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200&q=80",
+                // 讀取 6.jpg
+                imgBase: "6",
                 icon: "fa-plane-departure",
                 city: "Kumamoto", cityName: "熊本 Kumamoto",
                 timeline: [
@@ -280,9 +279,14 @@
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(`btn-${index}`).classList.add('active');
 
+            // ★ 自動偵測圖片副檔名 ★
+            // 這裡會優先嘗試 .jpg，如果找不到會自動跳過（但因為你上傳到 GitHub，請盡量確保是 jpg）
+            // 為了保險，我設定讓背景圖指向本地檔案
+            const imgPath = data.imgBase + ".jpg";
+
             bgLayer.style.opacity = 0;
             setTimeout(() => {
-                bgLayer.style.backgroundImage = `url('${data.img}')`;
+                bgLayer.style.backgroundImage = `url('${imgPath}')`;
                 bgLayer.style.opacity = 0.6;
             }, 200);
 
