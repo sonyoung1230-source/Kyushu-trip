@@ -180,21 +180,18 @@
             font-weight: 500;
         }
         
-        /* 1. 藍色導航 */
         .map-btn {
             background: rgba(52, 152, 219, 0.15); color: #5dade2;
             border: 1px solid rgba(52, 152, 219, 0.3);
         }
         .map-btn:hover { background: #3498db; color: #fff; border-color: #3498db; }
 
-        /* 2. 綠色官網 (放回來了！) */
         .link-btn {
             background: rgba(46, 204, 113, 0.15); color: #58d68d;
             border: 1px solid rgba(46, 204, 113, 0.3);
         }
         .link-btn:hover { background: #2ecc71; color: #fff; border-color: #2ecc71; }
 
-        /* 3. 橘色介紹 (彈出視窗) */
         .info-btn {
             background: rgba(230, 126, 34, 0.15); color: #f39c12;
             border: 1px solid rgba(230, 126, 34, 0.3);
@@ -291,11 +288,6 @@
     <script>
         const apiKey = '8e5674ecc7d8d72c4090fd64fcd2be3d'; 
 
-        // ★★★ 使用說明：如何讓按鈕顯示？ ★★★
-        // 1. map: 填寫關鍵字 -> 顯示藍色「導航」
-        // 2. link: 填寫網址 -> 顯示綠色「官網」
-        // 3. info: 填寫介紹文字 -> 顯示橘色「介紹」 (需配合 infoImg 圖片檔名)
-        
         const tripData = [
             {
                 day: "Day 1", date: "2/20 (五)", title: "福岡・屋台之夜",
@@ -304,16 +296,16 @@
                 tip: "福岡屋台大多「只收現金」，請準備好零錢。機場搭地鐵到博多站只要 5 分鐘，非常方便！",
                 imgBase: "1", icon: "fa-plane", city: "Fukuoka", cityName: "福岡 Fukuoka",
                 timeline: [
-                    { time: "15:25", act: "高雄起飛 (虎航 IT270)", map: "" },
+                    { time: "15:25", act: "高雄起飛 (虎航 IT270)", map: "高雄小港機場", link: "https://www.tigerairtw.com/zh-tw" },
                     { time: "18:55", act: "抵達福岡機場", map: "福岡機場", link: "https://www.fukuoka-airport.jp/tw/" },
-                    { time: "20:30", act: "民宿 Check-in", map: "博多站" }, 
+                    { time: "20:30", act: "民宿 Check-in", map: "博多站", link: "" }, 
                     { 
                         time: "21:00", 
                         act: "中洲屋台美食體驗", 
                         map: "中洲屋台", 
                         link: "https://yokanavi.com/zh-tw/feature/29/",
                         info: "福岡的屋台（路邊攤）是日本極少數保留下來的飲食文化。中洲川端沿著河畔排列著數十家屋台，氣氛極佳。推薦品嚐博多豚骨拉麵、明太子玉子燒和熱騰騰的關東煮。",
-                        infoImg: "info_yatai.jpg" // 記得上傳這張圖
+                        infoImg: "info_yatai.jpg" 
                     }
                 ]
             },
@@ -324,21 +316,21 @@
                 tip: "唐戶市場只有週末(五六日)有營業「活きいき馬関街」。宮地嶽神社光之道最佳觀賞時間是夕陽時分。",
                 imgBase: "2", icon: "fa-archway", city: "Kitakyushu", cityName: "北九州 Kitakyushu",
                 timeline: [
-                    { time: "08:03", act: "博多站出發 → 門司港", map: "博多站" },
+                    { time: "08:03", act: "博多站出發 → 門司港", map: "博多站", link: "" },
                     { 
                         time: "09:00", act: "唐戶市場吃海鮮", map: "唐戶市場", 
                         link: "https://www.karatoichiba.com/",
                         info: "唐戶市場位於下關，與門司港隔海相望。週末會變身為熱鬧的海鮮市集，遊客可以直接買新鮮的河豚生魚片、握壽司在海邊享用。",
                         infoImg: "info_karato.jpg"
                     },
-                    { time: "12:20", act: "午餐：門司港燒咖哩", map: "門司港 燒咖哩" },
+                    { time: "12:20", act: "午餐：門司港燒咖哩", map: "門司港 燒咖哩", link: "" },
                     { 
                         time: "15:32", act: "宮地嶽神社 (光之道)", map: "宮地嶽神社", 
                         link: "https://www.miyajidake.or.jp/",
                         info: "宮地嶽神社最著名的就是「光之道」，每年2月與10月，夕陽會剛好落在參道盡頭的海面上，形成一條金黃色的光輝大道。此外，這裡還有全日本第一大的注連繩。",
                         infoImg: "info_miyaji.jpg"
                     },
-                    { time: "19:00", act: "返回博多市區", map: "博多站" }
+                    { time: "19:00", act: "返回博多市區", map: "博多站", link: "" }
                 ]
             },
             {
@@ -348,8 +340,8 @@
                 tip: "黑川溫泉位於深山，夜晚氣溫較低。若要泡多家溫泉，建議購買「入湯手形」。",
                 imgBase: "3", icon: "fa-car", city: "Yufu", cityName: "由布院/黑川",
                 timeline: [
-                    { time: "09:00", act: "取車自駕出發", map: "博多租車" },
-                    { time: "10:20", act: "久留米採草莓", map: "久留米 草莓園" },
+                    { time: "09:00", act: "取車自駕出發", map: "博多租車", link: "" },
+                    { time: "10:20", act: "久留米採草莓", map: "久留米 草莓園", link: "" },
                     { 
                         time: "12:30", act: "由布院散策、金鱗湖", map: "金鱗湖", 
                         link: "https://www.city.yufu.oita.jp/",
@@ -377,14 +369,14 @@
                         info: "阿蘇山擁有全世界最大的破火山口之一。在大觀峰可以360度俯瞰阿蘇五岳（像一尊臥佛）以及廣闊的破火山口平原，景色極為壯觀。",
                         infoImg: "info_aso.jpg"
                     },
-                    { time: "11:30", act: "火山口參觀", map: "阿蘇中岳火山口" },
+                    { time: "11:30", act: "火山口參觀", map: "阿蘇中岳火山口", link: "" },
                     { 
-                        time: "14:30", act: "高千穗峽划船", map: "高千穗峽", 
+                        time: "14:30", act: "高千穗峽散策 (參觀真名井瀑布)", map: "高千穗峽", 
                         link: "https://takachiho-kanko.info/",
-                        info: "高千穗峽是由阿蘇火山熔岩冷卻後被五瀨川侵蝕而成的柱狀節理峽谷。兩側是陡峭的懸崖，真名井瀑布從上方注入，在這裡划船如同進入神話世界。",
+                        info: "高千穗峽是由阿蘇火山熔岩冷卻後被五瀨川侵蝕而成的柱狀節理峽谷。沿著峽谷步道散步，可以欣賞到著名的真名井瀑布從上方飛瀉而下，如同進入神話世界。",
                         infoImg: "info_takachiho.jpg"
                     },
-                    { time: "20:00", act: "高千穗神社 夜神樂", map: "高千穗神社" }
+                    { time: "20:00", act: "高千穗神社 夜神樂", map: "高千穗神社", link: "" }
                 ]
             },
             {
@@ -395,14 +387,14 @@
                 imgBase: "5", icon: "fa-landmark", city: "Kumamoto", cityName: "熊本 Kumamoto",
                 timeline: [
                     { time: "10:00", act: "山鹿溫泉文化園區", map: "八千代座", link: "https://yamaga-tanbou.jp/" },
-                    { time: "14:30", act: "鞠智城遺跡", map: "鞠智城" },
+                    { time: "14:30", act: "鞠智城遺跡", map: "鞠智城", link: "" },
                     { 
                         time: "16:30", act: "熊本城、城彩苑", map: "熊本城", 
                         link: "https://castle.kumamoto-guide.jp/",
                         info: "熊本城是日本三大名城之一，由名將加藤清正建造。以易守難攻的「武者返」石牆聞名。雖然2016年地震受損，但天守閣已經完全修復並開放參觀。",
                         infoImg: "info_castle.jpg"
                     },
-                    { time: "18:00", act: "下通商店街購物", map: "熊本下通商店街" }
+                    { time: "18:00", act: "下通商店街購物", map: "熊本下通商店街", link: "" }
                 ]
             },
             {
@@ -413,8 +405,8 @@
                 imgBase: "6", icon: "fa-plane-departure", city: "Kumamoto", cityName: "熊本 Kumamoto",
                 timeline: [
                     { time: "09:00", act: "前往熊本機場", map: "阿蘇熊本機場", link: "https://www.kumamoto-airport.co.jp/" },
-                    { time: "11:55", act: "華航 CI199 起飛", map: "" },
-                    { time: "13:40", act: "抵達高雄", map: "" }
+                    { time: "11:55", act: "華航 CI199 起飛", map: "", link: "" },
+                    { time: "13:40", act: "抵達高雄", map: "", link: "" }
                 ]
             }
         ];
@@ -468,7 +460,6 @@
             if(data) {
                 modalTitle.innerText = data.act;
                 modalDesc.innerText = data.info || "暫無介紹";
-                // 如果沒有圖片，使用預設佔位圖
                 modalImg.src = data.infoImg ? data.infoImg : "https://via.placeholder.com/800x400/333/fff?text=No+Image";
                 modal.classList.add('show');
             }
@@ -503,17 +494,22 @@
             let html = '';
             data.timeline.forEach((t, tIndex) => {
                 let btns = '<div class="btn-group">';
-                if(t.map) {
+                
+                // 導航按鈕
+                if(t.map && t.map !== "") {
                     btns += `<a href="https://www.google.com/maps/search/?api=1&query=${t.map}" target="_blank" class="action-btn map-btn"><i class="fas fa-location-arrow"></i> 導航</a>`;
                 }
-                // ★ 官網按鈕 (綠色) ★
-                if(t.link) {
+                
+                // 官網按鈕
+                if(t.link && t.link !== "") {
                     btns += `<a href="${t.link}" target="_blank" class="action-btn link-btn"><i class="fas fa-external-link-alt"></i> 官網</a>`;
                 }
-                // ★ 介紹按鈕 (橘色) ★
-                if(t.info) {
+                
+                // 介紹按鈕
+                if(t.info && t.info !== "") {
                     btns += `<button onclick="openInfo(${index}, ${tIndex})" class="action-btn info-btn"><i class="fas fa-book-open"></i> 介紹</button>`;
                 }
+                
                 btns += '</div>';
                 
                 html += `
@@ -554,5 +550,3 @@
 
         init();
     </script>
-</body>
-</html>
