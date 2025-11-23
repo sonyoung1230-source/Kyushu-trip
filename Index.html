@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <!-- 關鍵：加入這行解決 Edge/Chrome 阻擋圖片的問題 -->
+    <meta name="referrer" content="no-referrer">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>九州深度旅儀表板</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ========== 全局設定 ========== */
+        :root {
+            --gold: #e0c097;       /* 柔和金 */
+            --dark-blue: #1e2a38;  /* 深藍底色 */
+            --panel-bg: rgba(255, 255, 255, 0.08);
+            --text-main: #ffffff;
+            --text-sub: #b0b8c1;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #111;
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* ========== 左側導覽列 (固定) ========== */
+        .sidebar {
+            width: 90px;
+            background: #161b22;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            z-index: 10;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .sidebar-header h1 { font-size: 0.9rem; color: var(--gold); margin: 0; letter-spacing: 1px; }
+
+        .nav-btn {
+            padding: 20px 5px;
+            background: transparent;
+            border: none;
+            color: var(--text-sub);
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-btn i { font-size: 1.2rem; }
+        .nav-btn span { font-size: 0.75rem; font-weight: 500; }
+        .nav-btn .date-tag { font-size: 0.6rem; opacity: 0.6; }
+
+        .nav-btn:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        
+        .nav-btn.active {
+            background: rgba(224, 192, 151, 0.1);
+            color: var(--gold);
+            border-left-color: var(--gold);
+        }
+
+        /* ========== 右側主畫面 (可捲動) ========== */
+        .main-content {
+            flex: 1;
+            position: relative;
+            overflow-y: auto;
+            background-color: var(--dark-blue);
+            /* 預設背景，如果圖片壞掉會顯示這個漸層 */
+            background: linear-gradient(135deg, #1e2a38 0%, #0f141a 100%);
+        }
+
+        /* 動態背景圖層 */
+        .bg-image-layer {
+            position: fixed; /* 固定背景不隨內容捲動 */
+            top: 0; left: 90px; right: 0; bottom: 0;
+            background-size: cover;
+            background-position: center;
+            transition: opacity 0.5s ease;
+            opacity: 0.6; /* 圖片稍微變暗 */
+            z-index: 0;
+        }
+        
+        /* 黑色遮罩讓文字清楚 */
+        .content-overlay {
+            position: relative;
+            z-index: 1;
+            min-height: 100%;
+            background: linear-gradient(to right, rgba(15,20,26,0.9) 0%, rgba(15,20,26,0.6) 100%);
+            padding: 30px;
+            padding-bottom: 80px;
+        }
+
+        /* 標題區 */
+        .page-header { margin-bottom: 30px; animation: slideDown 0.5s ease; }
+        .day-badge { 
+            background: var(--gold); color: #111; 
+            padding: 4px 12px; border-radius: 4px; 
+            font-size: 0.8rem; font-weight: 700; letter-spacing: 1px;
+        }
+        .page-title { font-size: 2rem; margin: 10px 0 5px; text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .page-desc { color: #ccc; max-width: 600px; line-height: 1.6; font-size: 0.95rem; }
+
+        /* 天氣預報條 */
+        .weather-strip {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            max-width: 800px;
+        }
+
+        .weather-title { font-size: 0.85rem; color: var(--gold); margin-bottom: 10px; display: flex; justify-content: space-between; }
+        
+        .forecast-container {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        .forecast-container::-webkit-scrollbar { height: 4px; }
+        .forecast-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+
+        .forecast-item {
+            min-width: 70px;
+            text-align: center;
+            background: rgba(0,0,0,0.2);
+            padding: 8px 5px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .fc-date { font-size: 0.7rem; color: #aaa; margin-bottom: 4px; }
+        .fc-icon { width: 35px; height: 35px; }
+        .fc-temp { font-size: 0.9rem; font-weight: bold; color: #fff; margin-top: 2px; }
+        .fc-desc { font-size: 0.6rem; color: #bbb; }
+
+        /* 時間軸 */
+        .timeline {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-width: 600px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            padding-bottom: 30px;
+            border-left: 1px dashed rgba(255,255,255,0.2);
+        }
+        .timeline-item:last-child { border: none; }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute; left: -6px; top: 0;
+            width: 12px; height: 12px;
+            background: var(--gold);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(224, 192, 151, 0.4);
+        }
+
+        .tl-time { color: var(--gold); font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 5px; }
+        .tl-act { font-size: 1.05rem; color: #eee; line-height: 1.5; }
+
+        /* 動畫 */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 手機 RWD 調整 */
+        @media (min-width: 768px) {
+            .sidebar { width: 200px; }
+            .bg-image-layer { left: 200px; }
+            .nav-btn { flex-direction: row; padding-left: 30px; text-align: left; }
+            .nav-btn i { margin-right: 10px; width: 20px; text-align: center;}
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 左側選單 -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1>KYUSHU<br>TRAVEL</h1>
+        </div>
+        <!-- JS 生成按鈕 -->
+    </nav>
+
+    <!-- 右側內容區 -->
+    <main class="main-content">
+        <!-- 背景圖片層 -->
+        <div id="bg-layer" class="bg-image-layer"></div>
+        
+        <!-- 內容遮罩層 -->
+        <div class="content-overlay">
+            
+            <!-- 頁面標題與介紹 -->
+            <div id="header-area" class="page-header">
+                <!-- JS 填入 -->
+            </div>
+
+            <!-- 天氣預報條 -->
+            <div class="weather-strip">
+                <div class="weather-title">
+                    <span id="weather-loc-name"><i class="fas fa-map-marker-alt"></i> 載入中...</span>
+                    <span style="font-size:0.7rem; opacity:0.7;">未來 5 天預報</span>
+                </div>
+                <div class="forecast-container" id="forecast-list">
+                    <div style="padding:10px; font-size:0.8rem; color:#aaa;">點擊左側行程以載入天氣...</div>
+                </div>
+            </div>
+
+            <!-- 行程時間軸 -->
+            <ul class="timeline" id="timeline-list">
+                <!-- JS 填入 -->
+            </ul>
+
+        </div>
+    </main>
+
+    <script>
+        // API Key
+        const apiKey = '8e5674ecc7d8d72c4090fd64fcd2be3d'; 
+
+        // 資料庫：已經更新了門司港、阿蘇、熊本城的圖片
+        const tripData = [
+            {
+                day: "Day 1", date: "2/20 (五)",
+                title: "福岡・屋台之夜",
+                desc: "抵達福岡，感受九州門戶的繁華。夜晚一定要去中洲屋台，體驗在河畔小攤吃拉麵的獨特氛圍。",
+                // 福岡屋台圖
+                img: "https://images.unsplash.com/photo-1554797589-7241bb691973?w=1200&q=80",
+                icon: "fa-plane",
+                city: "Fukuoka",
+                cityName: "福岡 Fukuoka",
+                timeline: [
+                    { time: "15:25", act: "高雄起飛 (虎航 IT270)" },
+                    { time: "18:55", act: "抵達福岡機場" },
+                    { time: "19:30", act: "搭乘地鐵前往市區" },
+                    { time: "20:30", act: "民宿 Check-in" },
+                    { time: "21:00", act: "中洲屋台美食體驗 (拉麵、關東煮)" }
+                ]
+            },
+            {
+                day: "Day 2", date: "2/21 (六)",
+                title: "門司港・夕陽絕景",
+                desc: "前往北九州，漫步在充滿大正浪漫風情的門司港。下午造訪宮地嶽神社，運氣好能看見傳說中的「光之道」。",
+                // ★ 更新：門司港復古車站圖
+                img: "https://images.unsplash.com/photo-1576675466969-38eeae4fc1d7?w=1200&q=80",
+                icon: "fa-archway",
+                city: "Kitakyushu",
+                cityName: "北九州 Kitakyushu",
+                timeline: [
+                    { time: "08:03", act: "博多站出發 → 門司港" },
+                    { time: "09:00", act: "唐戶市場吃海鮮 (壽司、河豚)" },
+                    { time: "11:40", act: "九州鐵道紀念館" },
+                    { time: "12:20", act: "午餐：門司港燒咖哩" },
+                    { time: "15:32", act: "宮地嶽神社 (光之道、第一大注連繩)" },
+                    { time: "19:00", act: "返回博多市區" }
+                ]
+            },
+            {
+                day: "Day 3", date: "2/22 (日)",
+                title: "由布院・黑川秘湯",
+                desc: "租車自駕的一天。在久留米享受採草莓樂趣，接著前往夢幻的由布院金鱗湖，晚上入住深山秘境黑川溫泉。",
+                // 黑川溫泉氛圍圖
+                img: "https://images.unsplash.com/photo-1549140600-78c9b8275e6d?w=1200&q=80",
+                icon: "fa-car",
+                city: "Yufu", 
+                cityName: "由布院 Yufu",
+                timeline: [
+                    { time: "09:00", act: "取車自駕出發" },
+                    { time: "10:20", act: "久留米採草莓 (30分鐘吃到飽)" },
+                    { time: "12:30", act: "由布院散策、金鱗湖、史努比茶屋" },
+                    { time: "15:00", act: "前往黑川溫泉" },
+                    { time: "16:30", act: "溫泉旅館 Check-in (一泊二食)" }
+                ]
+            },
+            {
+                day: "Day 4", date: "2/23 (一)",
+                title: "阿蘇火山・高千穗",
+                desc: "見證阿蘇火山的壯闊，感受地球的呼吸。下午深入神話發源地高千穗峽，在峽谷中划船。",
+                // ★ 更新：阿蘇火山火山口圖
+                img: "https://images.unsplash.com/photo-1625631982392-623733f23d53?w=1200&q=80",
+                icon: "fa-mountain",
+                city: "Aso",
+                cityName: "阿蘇 Aso",
+                timeline: [
+                    { time: "10:00", act: "阿蘇山觀光 (大觀峰、草千里)" },
+                    { time: "11:30", act: "火山口參觀 (視瓦斯濃度開放)" },
+                    { time: "14:30", act: "高千穗峽划船、觀賞真名井瀑布" },
+                    { time: "16:00", act: "高千穗小火車" },
+                    { time: "20:00", act: "高千穗神社 夜神樂" }
+                ]
+            },
+            {
+                day: "Day 5", date: "2/24 (二)",
+                title: "山鹿・熊本城",
+                desc: "參觀古色古香的山鹿八千代座，最後回到熊本市區，欣賞整修後的熊本城天守閣。",
+                // ★ 更新：熊本城天守閣圖
+                img: "https://images.unsplash.com/photo-1589895441437-7b4e072378e3?w=1200&q=80",
+                icon: "fa-landmark",
+                city: "Kumamoto",
+                cityName: "熊本 Kumamoto",
+                timeline: [
+                    { time: "10:00", act: "山鹿溫泉文化園區 (八千代座)" },
+                    { time: "14:30", act: "鞠智城遺跡" },
+                    { time: "16:00", act: "熊本市區還車" },
+                    { time: "16:30", act: "熊本城、櫻之馬場城彩苑" },
+                    { time: "18:00", act: "下通商店街購物" }
+                ]
+            },
+            {
+                day: "Day 6", date: "2/25 (三)",
+                title: "再見九州",
+                desc: "收拾行李與戰利品，前往熊本機場。帶著滿滿的回憶返回溫暖的家。",
+                // 機場/飛機意象圖
+                img: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200&q=80",
+                icon: "fa-plane-departure",
+                city: "Kumamoto",
+                cityName: "熊本 Kumamoto",
+                timeline: [
+                    { time: "09:00", act: "前往熊本機場 (阿蘇熊本空港)" },
+                    { time: "11:55", act: "華航 CI199 起飛" },
+                    { time: "13:40", act: "抵達高雄小港機場" }
+                ]
+            }
+        ];
+
+        // ================= 程式邏輯區 =================
+
+        const sidebar = document.getElementById('sidebar');
+        const headerArea = document.getElementById('header-area');
+        const timelineList = document.getElementById('timeline-list');
+        const bgLayer = document.getElementById('bg-layer');
+        const weatherTitle = document.getElementById('weather-loc-name');
+        const forecastContainer = document.getElementById('forecast-list');
+
+        function init() {
+            tripData.forEach((item, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'nav-btn';
+                btn.id = `btn-${index}`;
+                btn.innerHTML = `
+                    <i class="fas ${item.icon}"></i>
+                    <span>${item.day}</span>
+                    <span class="date-tag">${item.date.split(' ')[0]}</span>
+                `;
+                btn.onclick = () => loadDay(index);
+                sidebar.appendChild(btn);
+            });
+            loadDay(0);
+        }
+
+        function loadDay(index) {
+            const data = tripData[index];
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${index}`).classList.add('active');
+
+            bgLayer.style.opacity = 0;
+            setTimeout(() => {
+                bgLayer.style.backgroundImage = `url('${data.img}')`;
+                bgLayer.style.opacity = 0.6;
+            }, 200);
+
+            headerArea.innerHTML = `
+                <span class="day-badge">${data.day} • ${data.date}</span>
+                <h2 class="page-title">${data.title}</h2>
+                <p class="page-desc">${data.desc}</p>
+            `;
+
+            let html = '';
+            data.timeline.forEach(t => {
+                html += `
+                    <li class="timeline-item">
+                        <span class="tl-time">${t.time}</span>
+                        <span class="tl-act">${t.act}</span>
+                    </li>
+                `;
+            });
+            timelineList.innerHTML = html;
+
+            fetchWeather(data.city, data.cityName);
+        }
+
+        async function fetchWeather(city, cityName) {
+            weatherTitle.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${cityName}`;
+            forecastContainer.innerHTML = `<div style="color:#aaa; font-size:0.8rem; padding:10px;"><i class="fas fa-spinner fa-spin"></i> 讀取天氣中...</div>`;
+
+            try {
+                const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric&lang=zh_tw`;
+                const res = await fetch(url);
+                const data = await res.json();
+
+                if (res.ok) {
+                    forecastContainer.innerHTML = ''; 
+                    // 嘗試取每天中午的資料
+                    const dailyData = data.list.filter((item) => item.dt_txt.includes("12:00:00"));
+                    const listToRender = dailyData.length >= 4 ? dailyData : [data.list[0], data.list[8], data.list[16], data.list[24], data.list[32]];
+
+                    listToRender.forEach(item => {
+                        const dateObj = new Date(item.dt * 1000);
+                        const dateStr = (dateObj.getMonth()+1) + "/" + dateObj.getDate();
+                        const icon = item.weather[0].icon;
+                        const temp = Math.round(item.main.temp);
+                        const desc = item.weather[0].description;
+
+                        const div = document.createElement('div');
+                        div.className = 'forecast-item';
+                        div.innerHTML = `
+                            <span class="fc-date">${dateStr}</span>
+                            <img src="http://openweathermap.org/img/w/${icon}.png" class="fc-icon">
+                            <span class="fc-temp">${temp}°</span>
+                            <span class="fc-desc">${desc}</span>
+                        `;
+                        forecastContainer.appendChild(div);
+                    });
+                } else {
+                    forecastContainer.innerHTML = `<div style="color:#faa; font-size:0.8rem;">無法取得天氣</div>`;
+                }
+            } catch (e) {
+                console.error(e);
+                forecastContainer.innerHTML = `<div style="color:#faa; font-size:0.8rem;">網路連線錯誤</div>`;
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
