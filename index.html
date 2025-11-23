@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>九州深度旅儀表板 2026</title>
+    <title>家族蛋生2026新春旅遊</title>
     
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
@@ -54,17 +54,18 @@
         }
 
         .sidebar-header {
-            padding: 20px 0;
+            padding: 20px 5px;
             text-align: center;
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        .sidebar-header h1 { font-size: 0.9rem; color: var(--gold); margin: 0; letter-spacing: 1px; }
+        /* 標題字體調整，讓它適合這兩行字 */
+        .sidebar-header h1 { font-size: 0.85rem; color: var(--gold); margin: 0; letter-spacing: 1px; line-height: 1.4; }
 
         .countdown-box {
             font-size: 0.7rem;
             color: #aaa;
             text-align: center;
-            margin-top: 5px;
+            margin-top: 8px;
             background: rgba(255,255,255,0.05);
             padding: 4px 0;
             border-radius: 4px;
@@ -252,7 +253,7 @@
 <body>
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h1>KYUSHU<br>TRAVEL 2026</h1>
+            <h1>家族蛋生2026<br>新春旅遊</h1>
             <div class="countdown-box" id="countdown">
                 距離出發<br><span class="cnt-num" id="days-left">0</span> 天
             </div>
@@ -359,8 +360,8 @@
             {
                 day: "Day 4", date: "2/23 (一)", title: "阿蘇火山・高千穗",
                 desc: "見證阿蘇火山的壯闊，下午深入神話發源地高千穗峽。",
-                tags: ["必喝：阿蘇牛奶", "體驗：高千穗划船"],
-                tip: "阿蘇火山口會因瓦斯濃度管制關閉。高千穗划船非常熱門，強烈建議事先上網預約。",
+                tags: ["必喝：阿蘇牛奶", "體驗：高千穗散策"],
+                tip: "阿蘇火山口會因瓦斯濃度管制關閉。高千穗峽步道適合散步拍照，空氣非常清新。",
                 imgBase: "4", icon: "fa-mountain", city: "Aso", cityName: "阿蘇 Aso",
                 timeline: [
                     { 
@@ -495,17 +496,14 @@
             data.timeline.forEach((t, tIndex) => {
                 let btns = '<div class="btn-group">';
                 
-                // 導航按鈕
                 if(t.map && t.map !== "") {
                     btns += `<a href="https://www.google.com/maps/search/?api=1&query=${t.map}" target="_blank" class="action-btn map-btn"><i class="fas fa-location-arrow"></i> 導航</a>`;
                 }
                 
-                // 官網按鈕
                 if(t.link && t.link !== "") {
                     btns += `<a href="${t.link}" target="_blank" class="action-btn link-btn"><i class="fas fa-external-link-alt"></i> 官網</a>`;
                 }
                 
-                // 介紹按鈕
                 if(t.info && t.info !== "") {
                     btns += `<button onclick="openInfo(${index}, ${tIndex})" class="action-btn info-btn"><i class="fas fa-book-open"></i> 介紹</button>`;
                 }
@@ -550,3 +548,5 @@
 
         init();
     </script>
+</body>
+</html>
