@@ -24,7 +24,7 @@
             --tag-bg: rgba(224, 192, 151, 0.2);
             --tip-bg: rgba(243, 156, 18, 0.15);
             --tip-border: #f39c12;
-            --modal-bg: #1a1a1a;
+            --modal-bg: #222;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -145,6 +145,7 @@
         }
         .tip-title { color: var(--tip-border); font-weight: bold; display: block; margin-bottom: 4px; font-size: 0.8rem; }
 
+        /* 天氣條 */
         .weather-strip {
             background: rgba(255,255,255,0.1);
             backdrop-filter: blur(10px);
@@ -161,6 +162,7 @@
         .fc-date { font-size: 0.7rem; color: #aaa; }
         .fc-temp { font-size: 0.9rem; font-weight: bold; color: #fff; }
 
+        /* 時間軸 */
         .timeline { list-style: none; padding: 0; margin: 0; max-width: 600px; animation: fadeIn 0.8s ease; }
         .timeline-item { position: relative; padding-left: 30px; padding-bottom: 30px; border-left: 1px dashed rgba(255,255,255,0.2); }
         .timeline-item:last-child { border: none; }
@@ -169,30 +171,40 @@
         .tl-content { display: flex; flex-direction: column; gap: 4px; }
         .tl-act { font-size: 1.05rem; color: #eee; line-height: 1.5; }
 
-        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px;}
+        /* 按鈕群組設定 */
+        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px;}
         .action-btn {
             display: inline-flex; align-items: center; gap: 5px;
-            padding: 4px 10px; border-radius: 20px; font-size: 0.75rem;
+            padding: 6px 12px; border-radius: 20px; font-size: 0.75rem;
             text-decoration: none; width: fit-content; transition: 0.2s; cursor: pointer;
+            font-weight: 500;
         }
         
+        /* 1. 藍色導航 */
         .map-btn {
-            background: rgba(52, 152, 219, 0.2); color: #3498db;
-            border: 1px solid rgba(52, 152, 219, 0.4);
+            background: rgba(52, 152, 219, 0.15); color: #5dade2;
+            border: 1px solid rgba(52, 152, 219, 0.3);
         }
-        .map-btn:hover { background: #3498db; color: #fff; }
+        .map-btn:hover { background: #3498db; color: #fff; border-color: #3498db; }
 
-        /* 新的介紹按鈕樣式 */
-        .info-btn {
-            background: rgba(230, 126, 34, 0.2); color: #e67e22;
-            border: 1px solid rgba(230, 126, 34, 0.4);
+        /* 2. 綠色官網 (放回來了！) */
+        .link-btn {
+            background: rgba(46, 204, 113, 0.15); color: #58d68d;
+            border: 1px solid rgba(46, 204, 113, 0.3);
         }
-        .info-btn:hover { background: #e67e22; color: #fff; }
+        .link-btn:hover { background: #2ecc71; color: #fff; border-color: #2ecc71; }
+
+        /* 3. 橘色介紹 (彈出視窗) */
+        .info-btn {
+            background: rgba(230, 126, 34, 0.15); color: #f39c12;
+            border: 1px solid rgba(230, 126, 34, 0.3);
+        }
+        .info-btn:hover { background: #e67e22; color: #fff; border-color: #e67e22; }
 
         /* ========== 彈出視窗 (Modal) ========== */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
             z-index: 2000;
             display: flex; align-items: center; justify-content: center;
             opacity: 0; visibility: hidden; transition: 0.3s;
@@ -204,28 +216,29 @@
             background: var(--modal-bg);
             width: 100%; max-width: 500px;
             border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
             overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
             transform: scale(0.9); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             max-height: 90vh; display: flex; flex-direction: column;
         }
         .modal-overlay.show .modal-card { transform: scale(1); }
 
-        .modal-img-container { height: 200px; overflow: hidden; position: relative; flex-shrink: 0;}
+        .modal-img-container { height: 220px; overflow: hidden; position: relative; flex-shrink: 0; background: #000; }
         .modal-img { width: 100%; height: 100%; object-fit: cover; }
         .modal-close {
             position: absolute; top: 15px; right: 15px;
-            background: rgba(0,0,0,0.6); color: #fff;
-            width: 32px; height: 32px; border-radius: 50%;
+            background: rgba(0,0,0,0.5); color: #fff;
+            width: 36px; height: 36px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            border: none; cursor: pointer; font-size: 1.2rem;
-            z-index: 10;
+            border: 1px solid rgba(255,255,255,0.3);
+            cursor: pointer; font-size: 1.2rem;
+            z-index: 10; backdrop-filter: blur(4px);
         }
 
         .modal-content { padding: 25px; overflow-y: auto; }
-        .modal-title { font-size: 1.5rem; color: var(--gold); margin: 0 0 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
-        .modal-desc { font-size: 1rem; color: #ddd; line-height: 1.8; text-align: justify; }
+        .modal-title { font-size: 1.4rem; color: var(--gold); margin: 0 0 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; line-height: 1.4; }
+        .modal-desc { font-size: 1rem; color: #ddd; line-height: 1.8; text-align: justify; white-space: pre-wrap; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
@@ -261,16 +274,16 @@
         </div>
     </main>
 
-    <!-- ★★★ 彈出視窗 HTML 結構 ★★★ -->
+    <!-- 彈出視窗 -->
     <div class="modal-overlay" id="modal">
         <div class="modal-card">
             <div class="modal-img-container">
                 <button class="modal-close" onclick="closeModal()">&times;</button>
-                <img src="" id="modal-img" class="modal-img" onerror="this.src='https://via.placeholder.com/600x400?text=No+Image'">
+                <img src="" id="modal-img" class="modal-img">
             </div>
             <div class="modal-content">
-                <h3 class="modal-title" id="modal-title">標題</h3>
-                <div class="modal-desc" id="modal-desc">內容</div>
+                <h3 class="modal-title" id="modal-title"></h3>
+                <div class="modal-desc" id="modal-desc"></div>
             </div>
         </div>
     </div>
@@ -278,7 +291,11 @@
     <script>
         const apiKey = '8e5674ecc7d8d72c4090fd64fcd2be3d'; 
 
-        // ★★★ 資料庫：請在這裡填寫歷史介紹與圖片檔名 ★★★
+        // ★★★ 使用說明：如何讓按鈕顯示？ ★★★
+        // 1. map: 填寫關鍵字 -> 顯示藍色「導航」
+        // 2. link: 填寫網址 -> 顯示綠色「官網」
+        // 3. info: 填寫介紹文字 -> 顯示橘色「介紹」 (需配合 infoImg 圖片檔名)
+        
         const tripData = [
             {
                 day: "Day 1", date: "2/20 (五)", title: "福岡・屋台之夜",
@@ -288,15 +305,15 @@
                 imgBase: "1", icon: "fa-plane", city: "Fukuoka", cityName: "福岡 Fukuoka",
                 timeline: [
                     { time: "15:25", act: "高雄起飛 (虎航 IT270)", map: "" },
-                    { time: "18:55", act: "抵達福岡機場", map: "福岡機場" },
+                    { time: "18:55", act: "抵達福岡機場", map: "福岡機場", link: "https://www.fukuoka-airport.jp/tw/" },
                     { time: "20:30", act: "民宿 Check-in", map: "博多站" }, 
                     { 
                         time: "21:00", 
                         act: "中洲屋台美食體驗", 
                         map: "中洲屋台", 
-                        // ★ 介紹內容範例 ★
-                        info: "屋台是福岡的一大特色，主要集中在中洲川端、天神一帶。這些路邊攤販售著拉麵、關東煮、燒鳥等美食，氣氛熱鬧。屋台文化起源於戰後，是當地人下班後小酌放鬆的地方。",
-                        infoImg: "info_yatai.jpg" // 請確保你有上傳這張圖
+                        link: "https://yokanavi.com/zh-tw/feature/29/",
+                        info: "福岡的屋台（路邊攤）是日本極少數保留下來的飲食文化。中洲川端沿著河畔排列著數十家屋台，氣氛極佳。推薦品嚐博多豚骨拉麵、明太子玉子燒和熱騰騰的關東煮。",
+                        infoImg: "info_yatai.jpg" // 記得上傳這張圖
                     }
                 ]
             },
@@ -309,14 +326,16 @@
                 timeline: [
                     { time: "08:03", act: "博多站出發 → 門司港", map: "博多站" },
                     { 
-                        time: "09:00", act: "唐戶市場吃海鮮", map: "唐戶市場",
-                        info: "唐戶市場位於下關，是著名的河豚批發市場。週末變身為「海鮮屋台街」，可以買到新鮮便宜的握壽司、河豚刺身，在海邊享用。",
+                        time: "09:00", act: "唐戶市場吃海鮮", map: "唐戶市場", 
+                        link: "https://www.karatoichiba.com/",
+                        info: "唐戶市場位於下關，與門司港隔海相望。週末會變身為熱鬧的海鮮市集，遊客可以直接買新鮮的河豚生魚片、握壽司在海邊享用。",
                         infoImg: "info_karato.jpg"
                     },
                     { time: "12:20", act: "午餐：門司港燒咖哩", map: "門司港 燒咖哩" },
                     { 
-                        time: "15:32", act: "宮地嶽神社 (光之道)", map: "宮地嶽神社",
-                        info: "宮地嶽神社以直通大海的參道「光之道」聞名，特別是在2月與10月的夕陽時分，太陽會剛好落在參道盡頭，形成絕美景色。此外，這裡還有日本第一大的注連繩。",
+                        time: "15:32", act: "宮地嶽神社 (光之道)", map: "宮地嶽神社", 
+                        link: "https://www.miyajidake.or.jp/",
+                        info: "宮地嶽神社最著名的就是「光之道」，每年2月與10月，夕陽會剛好落在參道盡頭的海面上，形成一條金黃色的光輝大道。此外，這裡還有全日本第一大的注連繩。",
                         infoImg: "info_miyaji.jpg"
                     },
                     { time: "19:00", act: "返回博多市區", map: "博多站" }
@@ -330,14 +349,18 @@
                 imgBase: "3", icon: "fa-car", city: "Yufu", cityName: "由布院/黑川",
                 timeline: [
                     { time: "09:00", act: "取車自駕出發", map: "博多租車" },
-                    { time: "12:30", act: "由布院散策、金鱗湖", map: "金鱗湖",
-                      info: "由布院是日本女性最愛的溫泉地之一。金鱗湖因晨間霧氣瀰漫而夢幻，周邊有許多特色小店，如史努比茶屋、花卉村等。",
-                      infoImg: "info_yufu.jpg"
+                    { time: "10:20", act: "久留米採草莓", map: "久留米 草莓園" },
+                    { 
+                        time: "12:30", act: "由布院散策、金鱗湖", map: "金鱗湖", 
+                        link: "https://www.city.yufu.oita.jp/",
+                        info: "由布院是九州最受歡迎的溫泉勝地之一，街道充滿歐風與日式混合的文青感。金鱗湖在秋冬的清晨會因為溫泉水氣而產生夢幻的晨霧。",
+                        infoImg: "info_yufu.jpg"
                     },
-                    { time: "15:00", act: "前往黑川溫泉", map: "黑川溫泉" },
-                    { time: "16:30", act: "溫泉旅館一泊二食", map: "黑川溫泉旅館",
-                      info: "黑川溫泉致力於保持自然風貌，沒有霓虹燈與大型飯店。這裡以「露天風呂巡禮」聞名，購買入湯手形即可任選三家旅館泡湯。",
-                      infoImg: "info_kurokawa.jpg"
+                    { time: "15:00", act: "前往黑川溫泉", map: "黑川溫泉", link: "https://www.kurokawaonsen.or.jp/" },
+                    { 
+                        time: "16:30", act: "溫泉旅館一泊二食", map: "黑川溫泉旅館",
+                        info: "黑川溫泉以「露天風呂」聞名全日本。這裡保持了古色古香的江戶風情，沒有大型霓虹招牌。使用「入湯手形」可以任選三間旅館的露天溫泉體驗。",
+                        infoImg: "info_kurokawa.jpg"
                     }
                 ]
             },
@@ -348,14 +371,18 @@
                 tip: "阿蘇火山口會因瓦斯濃度管制關閉。高千穗划船非常熱門，強烈建議事先上網預約。",
                 imgBase: "4", icon: "fa-mountain", city: "Aso", cityName: "阿蘇 Aso",
                 timeline: [
-                    { time: "10:00", act: "阿蘇山觀光 (大觀峰)", map: "阿蘇大觀峰",
-                      info: "阿蘇山是世界級的活火山，擁有巨大的破火山口。大觀峰是最佳觀景點，可以眺望阿蘇五岳與如綠色地毯般的草千里。",
-                      infoImg: "info_aso.jpg"
+                    { 
+                        time: "10:00", act: "阿蘇山觀光 (大觀峰)", map: "阿蘇大觀峰", 
+                        link: "http://www.aso.ne.jp/~volcano/",
+                        info: "阿蘇山擁有全世界最大的破火山口之一。在大觀峰可以360度俯瞰阿蘇五岳（像一尊臥佛）以及廣闊的破火山口平原，景色極為壯觀。",
+                        infoImg: "info_aso.jpg"
                     },
                     { time: "11:30", act: "火山口參觀", map: "阿蘇中岳火山口" },
-                    { time: "14:30", act: "高千穗峽划船", map: "高千穗峽",
-                      info: "高千穗峽是由阿蘇火山噴發的熔岩侵蝕而成的峽谷。兩岸是略帶紅色的安山岩懸崖，真名井瀑布從上方飛瀉而下，划船穿越其中如入仙境。",
-                      infoImg: "info_takachiho.jpg"
+                    { 
+                        time: "14:30", act: "高千穗峽划船", map: "高千穗峽", 
+                        link: "https://takachiho-kanko.info/",
+                        info: "高千穗峽是由阿蘇火山熔岩冷卻後被五瀨川侵蝕而成的柱狀節理峽谷。兩側是陡峭的懸崖，真名井瀑布從上方注入，在這裡划船如同進入神話世界。",
+                        infoImg: "info_takachiho.jpg"
                     },
                     { time: "20:00", act: "高千穗神社 夜神樂", map: "高千穗神社" }
                 ]
@@ -367,11 +394,13 @@
                 tip: "熊本城範圍很大，且多樓梯與斜坡，請穿好走的鞋子。",
                 imgBase: "5", icon: "fa-landmark", city: "Kumamoto", cityName: "熊本 Kumamoto",
                 timeline: [
-                    { time: "10:00", act: "山鹿溫泉文化園區", map: "八千代座" },
+                    { time: "10:00", act: "山鹿溫泉文化園區", map: "八千代座", link: "https://yamaga-tanbou.jp/" },
                     { time: "14:30", act: "鞠智城遺跡", map: "鞠智城" },
-                    { time: "16:30", act: "熊本城、城彩苑", map: "熊本城",
-                      info: "熊本城由加藤清正建造，與大阪城、名古屋城並列日本三大名城。以難以攻破的「武者返」石牆聞名。雖然2016年地震受損，但天守閣已修復並開放。",
-                      infoImg: "info_castle.jpg"
+                    { 
+                        time: "16:30", act: "熊本城、城彩苑", map: "熊本城", 
+                        link: "https://castle.kumamoto-guide.jp/",
+                        info: "熊本城是日本三大名城之一，由名將加藤清正建造。以易守難攻的「武者返」石牆聞名。雖然2016年地震受損，但天守閣已經完全修復並開放參觀。",
+                        infoImg: "info_castle.jpg"
                     },
                     { time: "18:00", act: "下通商店街購物", map: "熊本下通商店街" }
                 ]
@@ -383,7 +412,7 @@
                 tip: "熊本機場雖然不大，但國際線航廈也有免稅店。請預留 2 小時以上抵達機場辦理登機。",
                 imgBase: "6", icon: "fa-plane-departure", city: "Kumamoto", cityName: "熊本 Kumamoto",
                 timeline: [
-                    { time: "09:00", act: "前往熊本機場", map: "阿蘇熊本機場" },
+                    { time: "09:00", act: "前往熊本機場", map: "阿蘇熊本機場", link: "https://www.kumamoto-airport.co.jp/" },
                     { time: "11:55", act: "華航 CI199 起飛", map: "" },
                     { time: "13:40", act: "抵達高雄", map: "" }
                 ]
@@ -434,25 +463,21 @@
             loadDay(0);
         }
 
-        // ★★★ 開啟 Modal 函式 ★★★
-        // 傳入 dayIndex (哪一天) 和 timeIndex (哪一個行程)
         window.openInfo = function(dayIndex, timeIndex) {
             const data = tripData[dayIndex].timeline[timeIndex];
             if(data) {
                 modalTitle.innerText = data.act;
                 modalDesc.innerText = data.info || "暫無介紹";
-                // 如果有圖片就顯示，沒有就用預設
-                modalImg.src = data.infoImg ? data.infoImg : ""; 
+                // 如果沒有圖片，使用預設佔位圖
+                modalImg.src = data.infoImg ? data.infoImg : "https://via.placeholder.com/800x400/333/fff?text=No+Image";
                 modal.classList.add('show');
             }
         }
 
-        // 關閉 Modal
         window.closeModal = function() {
             modal.classList.remove('show');
         }
 
-        // 點擊背景關閉
         modal.addEventListener('click', function(e) {
             if (e.target === modal) closeModal();
         });
@@ -478,18 +503,17 @@
             let html = '';
             data.timeline.forEach((t, tIndex) => {
                 let btns = '<div class="btn-group">';
-                
-                // 導航按鈕
                 if(t.map) {
                     btns += `<a href="https://www.google.com/maps/search/?api=1&query=${t.map}" target="_blank" class="action-btn map-btn"><i class="fas fa-location-arrow"></i> 導航</a>`;
                 }
-                
-                // ★ 新增：介紹按鈕 (呼叫 openInfo) ★
-                // 只有當這個行程有 info 資料時，才顯示按鈕
+                // ★ 官網按鈕 (綠色) ★
+                if(t.link) {
+                    btns += `<a href="${t.link}" target="_blank" class="action-btn link-btn"><i class="fas fa-external-link-alt"></i> 官網</a>`;
+                }
+                // ★ 介紹按鈕 (橘色) ★
                 if(t.info) {
                     btns += `<button onclick="openInfo(${index}, ${tIndex})" class="action-btn info-btn"><i class="fas fa-book-open"></i> 介紹</button>`;
                 }
-                
                 btns += '</div>';
                 
                 html += `
