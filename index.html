@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>九州深度旅儀表板 2026</title> <!-- 改標題強制更新 -->
+    <title>九州深度旅儀表板 2026</title>
     
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
@@ -15,32 +15,152 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        :root { --gold: #e0c097; --dark-blue: #1e2a38; --text-main: #ffffff; --text-sub: #b0b8c1; }
+        /* ========== 全局設定 ========== */
+        :root {
+            --gold: #e0c097;
+            --dark-blue: #1e2a38;
+            --text-main: #ffffff;
+            --text-sub: #b0b8c1;
+            --tag-bg: rgba(224, 192, 151, 0.2);
+            --tip-bg: rgba(243, 156, 18, 0.15);
+            --tip-border: #f39c12;
+            --modal-bg: #1a1a1a;
+        }
+
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Noto Sans TC', sans-serif; margin: 0; padding: 0; background-color: #111; color: var(--text-main); height: 100vh; display: flex; overflow: hidden; }
-        .sidebar { width: 90px; background: #161b22; border-right: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; overflow-y: auto; z-index: 10; flex-shrink: 0; padding-bottom: 20px; }
-        .sidebar-header { padding: 20px 0; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #111;
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* 左側導覽列 */
+        .sidebar {
+            width: 90px;
+            background: #161b22;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            z-index: 10;
+            flex-shrink: 0;
+            padding-bottom: 20px;
+        }
+
+        .sidebar-header {
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
         .sidebar-header h1 { font-size: 0.9rem; color: var(--gold); margin: 0; letter-spacing: 1px; }
-        .countdown-box { font-size: 0.7rem; color: #aaa; text-align: center; margin-top: 5px; background: rgba(255,255,255,0.05); padding: 4px 0; border-radius: 4px; margin: 10px 5px; }
+
+        .countdown-box {
+            font-size: 0.7rem;
+            color: #aaa;
+            text-align: center;
+            margin-top: 5px;
+            background: rgba(255,255,255,0.05);
+            padding: 4px 0;
+            border-radius: 4px;
+            margin: 10px 5px;
+        }
         .cnt-num { color: var(--gold); font-weight: bold; font-size: 0.9rem; }
-        .nav-btn { padding: 20px 5px; background: transparent; border: none; color: var(--text-sub); cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 6px; border-left: 3px solid transparent; }
+
+        .nav-btn {
+            padding: 20px 5px;
+            background: transparent;
+            border: none;
+            color: var(--text-sub);
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            border-left: 3px solid transparent;
+        }
+
         .nav-btn i { font-size: 1.2rem; }
         .nav-btn span { font-size: 0.75rem; font-weight: 500; }
         .nav-btn .date-tag { font-size: 0.6rem; opacity: 0.6; }
         .nav-btn.active { background: rgba(224, 192, 151, 0.1); color: var(--gold); border-left-color: var(--gold); }
-        .main-content { flex: 1; position: relative; overflow-y: auto; background-color: var(--dark-blue); background: linear-gradient(135deg, #1e2a38 0%, #0f141a 100%); }
-        .bg-image-layer { position: fixed; top: 0; left: 90px; right: 0; bottom: 0; background-size: cover; background-position: center; transition: opacity 0.5s ease; opacity: 0.6; z-index: 0; }
-        .content-overlay { position: relative; z-index: 1; min-height: 100%; background: linear-gradient(to right, rgba(15,20,26,0.95) 0%, rgba(15,20,26,0.6) 100%); padding: 30px; padding-bottom: 100px; }
-        .page-header { margin-bottom: 30px; animation: slideDown 0.5s ease; }
+
+        /* 右側主畫面 */
+        .main-content {
+            flex: 1;
+            position: relative;
+            overflow-y: auto;
+            background-color: var(--dark-blue);
+            background: linear-gradient(135deg, #1e2a38 0%, #0f141a 100%);
+        }
+
+        .bg-image-layer {
+            position: fixed;
+            top: 0; left: 90px; right: 0; bottom: 0;
+            background-size: cover;
+            background-position: center;
+            transition: opacity 0.5s ease;
+            opacity: 0.6;
+            z-index: 0;
+        }
+        
+        .content-overlay {
+            position: relative;
+            z-index: 1;
+            min-height: 100%;
+            background: linear-gradient(to right, rgba(15,20,26,0.95) 0%, rgba(15,20,26,0.6) 100%);
+            padding: 30px;
+            padding-bottom: 100px;
+        }
+
+        .page-header { margin-bottom: 25px; animation: slideDown 0.5s ease; }
         .day-badge { background: var(--gold); color: #111; padding: 4px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: 700; }
         .page-title { font-size: 2rem; margin: 10px 0 5px; text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        .page-desc { color: #ccc; max-width: 600px; line-height: 1.6; font-size: 0.95rem; }
-        .weather-strip { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 12px; padding: 15px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.1); max-width: 800px; }
+        .page-desc { color: #ccc; max-width: 600px; line-height: 1.6; font-size: 0.95rem; margin-bottom: 15px;}
+
+        .tags-container { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+        .tag { 
+            background: var(--tag-bg); color: var(--gold); 
+            padding: 4px 10px; border-radius: 20px; 
+            font-size: 0.75rem; border: 1px solid rgba(224, 192, 151, 0.3);
+            display: flex; align-items: center; gap: 5px;
+        }
+
+        .tip-box {
+            background: var(--tip-bg);
+            border-left: 4px solid var(--tip-border);
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #ecf0f1;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            max-width: 600px;
+        }
+        .tip-title { color: var(--tip-border); font-weight: bold; display: block; margin-bottom: 4px; font-size: 0.8rem; }
+
+        .weather-strip {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            max-width: 800px;
+        }
         .weather-title { font-size: 0.85rem; color: var(--gold); margin-bottom: 10px; display: flex; justify-content: space-between; }
         .forecast-container { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
         .forecast-item { min-width: 70px; text-align: center; background: rgba(0,0,0,0.2); padding: 8px 5px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; }
         .fc-date { font-size: 0.7rem; color: #aaa; }
         .fc-temp { font-size: 0.9rem; font-weight: bold; color: #fff; }
+
         .timeline { list-style: none; padding: 0; margin: 0; max-width: 600px; animation: fadeIn 0.8s ease; }
         .timeline-item { position: relative; padding-left: 30px; padding-bottom: 30px; border-left: 1px dashed rgba(255,255,255,0.2); }
         .timeline-item:last-child { border: none; }
@@ -48,18 +168,80 @@
         .tl-time { color: var(--gold); font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 5px; }
         .tl-content { display: flex; flex-direction: column; gap: 4px; }
         .tl-act { font-size: 1.05rem; color: #eee; line-height: 1.5; }
-        .map-btn { display: inline-flex; align-items: center; gap: 5px; background: rgba(52, 152, 219, 0.2); color: #3498db; border: 1px solid rgba(52, 152, 219, 0.4); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; text-decoration: none; width: fit-content; margin-top: 5px; transition: 0.2s; }
+
+        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px;}
+        .action-btn {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 4px 10px; border-radius: 20px; font-size: 0.75rem;
+            text-decoration: none; width: fit-content; transition: 0.2s; cursor: pointer;
+        }
+        
+        .map-btn {
+            background: rgba(52, 152, 219, 0.2); color: #3498db;
+            border: 1px solid rgba(52, 152, 219, 0.4);
+        }
         .map-btn:hover { background: #3498db; color: #fff; }
-        .map-btn i { font-size: 0.7rem; }
+
+        /* 新的介紹按鈕樣式 */
+        .info-btn {
+            background: rgba(230, 126, 34, 0.2); color: #e67e22;
+            border: 1px solid rgba(230, 126, 34, 0.4);
+        }
+        .info-btn:hover { background: #e67e22; color: #fff; }
+
+        /* ========== 彈出視窗 (Modal) ========== */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: 0.3s;
+            padding: 20px;
+        }
+        .modal-overlay.show { opacity: 1; visibility: visible; }
+
+        .modal-card {
+            background: var(--modal-bg);
+            width: 100%; max-width: 500px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            transform: scale(0.9); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-height: 90vh; display: flex; flex-direction: column;
+        }
+        .modal-overlay.show .modal-card { transform: scale(1); }
+
+        .modal-img-container { height: 200px; overflow: hidden; position: relative; flex-shrink: 0;}
+        .modal-img { width: 100%; height: 100%; object-fit: cover; }
+        .modal-close {
+            position: absolute; top: 15px; right: 15px;
+            background: rgba(0,0,0,0.6); color: #fff;
+            width: 32px; height: 32px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: none; cursor: pointer; font-size: 1.2rem;
+            z-index: 10;
+        }
+
+        .modal-content { padding: 25px; overflow-y: auto; }
+        .modal-title { font-size: 1.5rem; color: var(--gold); margin: 0 0 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        .modal-desc { font-size: 1rem; color: #ddd; line-height: 1.8; text-align: justify; }
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-        @media (min-width: 768px) { .sidebar { width: 200px; } .bg-image-layer { left: 200px; } .nav-btn { flex-direction: row; padding-left: 30px; text-align: left; } .nav-btn i { margin-right: 10px; width: 20px; text-align: center;} .content-overlay { padding-left: 50px; } }
+
+        @media (min-width: 768px) {
+            .sidebar { width: 200px; }
+            .bg-image-layer { left: 200px; }
+            .nav-btn { flex-direction: row; padding-left: 30px; text-align: left; }
+            .nav-btn i { margin-right: 10px; width: 20px; text-align: center;}
+            .content-overlay { padding-left: 50px; }
+        }
     </style>
 </head>
 <body>
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <!-- 這裡我改成了 2026，讓你一眼就能確認是否更新成功 -->
             <h1>KYUSHU<br>TRAVEL 2026</h1>
             <div class="countdown-box" id="countdown">
                 距離出發<br><span class="cnt-num" id="days-left">0</span> 天
@@ -70,6 +252,7 @@
         <div id="bg-layer" class="bg-image-layer"></div>
         <div class="content-overlay">
             <div id="header-area" class="page-header"></div>
+            <div id="info-area"></div>
             <div class="weather-strip">
                 <div class="weather-title"><span id="weather-loc-name"></span><span>未來 5 天</span></div>
                 <div class="forecast-container" id="forecast-list"></div>
@@ -78,70 +261,126 @@
         </div>
     </main>
 
+    <!-- ★★★ 彈出視窗 HTML 結構 ★★★ -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-card">
+            <div class="modal-img-container">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <img src="" id="modal-img" class="modal-img" onerror="this.src='https://via.placeholder.com/600x400?text=No+Image'">
+            </div>
+            <div class="modal-content">
+                <h3 class="modal-title" id="modal-title">標題</h3>
+                <div class="modal-desc" id="modal-desc">內容</div>
+            </div>
+        </div>
+    </div>
+
     <script>
         const apiKey = '8e5674ecc7d8d72c4090fd64fcd2be3d'; 
 
+        // ★★★ 資料庫：請在這裡填寫歷史介紹與圖片檔名 ★★★
         const tripData = [
             {
                 day: "Day 1", date: "2/20 (五)", title: "福岡・屋台之夜",
                 desc: "抵達福岡，感受九州門戶的繁華。夜晚一定要去中洲屋台，體驗在河畔小攤吃拉麵的獨特氛圍。",
+                tags: ["必吃：豚骨拉麵", "必吃：明太子", "必吃：關東煮"],
+                tip: "福岡屋台大多「只收現金」，請準備好零錢。機場搭地鐵到博多站只要 5 分鐘，非常方便！",
                 imgBase: "1", icon: "fa-plane", city: "Fukuoka", cityName: "福岡 Fukuoka",
                 timeline: [
                     { time: "15:25", act: "高雄起飛 (虎航 IT270)", map: "" },
                     { time: "18:55", act: "抵達福岡機場", map: "福岡機場" },
                     { time: "20:30", act: "民宿 Check-in", map: "博多站" }, 
-                    { time: "21:00", act: "中洲屋台美食體驗", map: "中洲屋台" }
+                    { 
+                        time: "21:00", 
+                        act: "中洲屋台美食體驗", 
+                        map: "中洲屋台", 
+                        // ★ 介紹內容範例 ★
+                        info: "屋台是福岡的一大特色，主要集中在中洲川端、天神一帶。這些路邊攤販售著拉麵、關東煮、燒鳥等美食，氣氛熱鬧。屋台文化起源於戰後，是當地人下班後小酌放鬆的地方。",
+                        infoImg: "info_yatai.jpg" // 請確保你有上傳這張圖
+                    }
                 ]
             },
             {
                 day: "Day 2", date: "2/21 (六)", title: "門司港・夕陽絕景",
                 desc: "前往北九州，漫步在充滿大正浪漫風情的門司港車站。下午造訪宮地嶽神社，朝聖光之道。",
+                tags: ["必吃：門司港燒咖哩", "必吃：唐戶市場河豚"],
+                tip: "唐戶市場只有週末(五六日)有營業「活きいき馬関街」。宮地嶽神社光之道最佳觀賞時間是夕陽時分。",
                 imgBase: "2", icon: "fa-archway", city: "Kitakyushu", cityName: "北九州 Kitakyushu",
                 timeline: [
                     { time: "08:03", act: "博多站出發 → 門司港", map: "博多站" },
-                    { time: "09:00", act: "唐戶市場吃海鮮", map: "唐戶市場" },
+                    { 
+                        time: "09:00", act: "唐戶市場吃海鮮", map: "唐戶市場",
+                        info: "唐戶市場位於下關，是著名的河豚批發市場。週末變身為「海鮮屋台街」，可以買到新鮮便宜的握壽司、河豚刺身，在海邊享用。",
+                        infoImg: "info_karato.jpg"
+                    },
                     { time: "12:20", act: "午餐：門司港燒咖哩", map: "門司港 燒咖哩" },
-                    { time: "15:32", act: "宮地嶽神社 (光之道)", map: "宮地嶽神社" },
+                    { 
+                        time: "15:32", act: "宮地嶽神社 (光之道)", map: "宮地嶽神社",
+                        info: "宮地嶽神社以直通大海的參道「光之道」聞名，特別是在2月與10月的夕陽時分，太陽會剛好落在參道盡頭，形成絕美景色。此外，這裡還有日本第一大的注連繩。",
+                        infoImg: "info_miyaji.jpg"
+                    },
                     { time: "19:00", act: "返回博多市區", map: "博多站" }
                 ]
             },
             {
                 day: "Day 3", date: "2/22 (日)", title: "由布院・黑川秘湯",
                 desc: "租車自駕，享受由布院金鱗湖的晨霧，晚上入住深山秘境黑川溫泉。",
+                tags: ["必吃：B-speak 蛋糕捲", "必吃：金賞可樂餅", "體驗：入湯手形"],
+                tip: "黑川溫泉位於深山，夜晚氣溫較低。若要泡多家溫泉，建議購買「入湯手形」。",
                 imgBase: "3", icon: "fa-car", city: "Yufu", cityName: "由布院/黑川",
                 timeline: [
                     { time: "09:00", act: "取車自駕出發", map: "博多租車" },
-                    { time: "10:20", act: "久留米採草莓", map: "久留米 草莓園" },
-                    { time: "12:30", act: "由布院散策、金鱗湖", map: "金鱗湖" },
+                    { time: "12:30", act: "由布院散策、金鱗湖", map: "金鱗湖",
+                      info: "由布院是日本女性最愛的溫泉地之一。金鱗湖因晨間霧氣瀰漫而夢幻，周邊有許多特色小店，如史努比茶屋、花卉村等。",
+                      infoImg: "info_yufu.jpg"
+                    },
                     { time: "15:00", act: "前往黑川溫泉", map: "黑川溫泉" },
-                    { time: "16:30", act: "溫泉旅館一泊二食", map: "黑川溫泉旅館" }
+                    { time: "16:30", act: "溫泉旅館一泊二食", map: "黑川溫泉旅館",
+                      info: "黑川溫泉致力於保持自然風貌，沒有霓虹燈與大型飯店。這裡以「露天風呂巡禮」聞名，購買入湯手形即可任選三家旅館泡湯。",
+                      infoImg: "info_kurokawa.jpg"
+                    }
                 ]
             },
             {
                 day: "Day 4", date: "2/23 (一)", title: "阿蘇火山・高千穗",
                 desc: "見證阿蘇火山的壯闊，下午深入神話發源地高千穗峽。",
+                tags: ["必喝：阿蘇牛奶", "體驗：高千穗划船"],
+                tip: "阿蘇火山口會因瓦斯濃度管制關閉。高千穗划船非常熱門，強烈建議事先上網預約。",
                 imgBase: "4", icon: "fa-mountain", city: "Aso", cityName: "阿蘇 Aso",
                 timeline: [
-                    { time: "10:00", act: "阿蘇山觀光 (大觀峰)", map: "阿蘇大觀峰" },
+                    { time: "10:00", act: "阿蘇山觀光 (大觀峰)", map: "阿蘇大觀峰",
+                      info: "阿蘇山是世界級的活火山，擁有巨大的破火山口。大觀峰是最佳觀景點，可以眺望阿蘇五岳與如綠色地毯般的草千里。",
+                      infoImg: "info_aso.jpg"
+                    },
                     { time: "11:30", act: "火山口參觀", map: "阿蘇中岳火山口" },
-                    { time: "14:30", act: "高千穗峽划船", map: "高千穗峽" },
+                    { time: "14:30", act: "高千穗峽划船", map: "高千穗峽",
+                      info: "高千穗峽是由阿蘇火山噴發的熔岩侵蝕而成的峽谷。兩岸是略帶紅色的安山岩懸崖，真名井瀑布從上方飛瀉而下，划船穿越其中如入仙境。",
+                      infoImg: "info_takachiho.jpg"
+                    },
                     { time: "20:00", act: "高千穗神社 夜神樂", map: "高千穗神社" }
                 ]
             },
             {
                 day: "Day 5", date: "2/24 (二)", title: "山鹿・熊本城",
                 desc: "參觀歷史悠久的熊本城，天守閣的壯麗不容錯過。",
+                tags: ["必吃：生馬肉刺身", "必吃：熊本拉麵", "必買：熊本熊周邊"],
+                tip: "熊本城範圍很大，且多樓梯與斜坡，請穿好走的鞋子。",
                 imgBase: "5", icon: "fa-landmark", city: "Kumamoto", cityName: "熊本 Kumamoto",
                 timeline: [
                     { time: "10:00", act: "山鹿溫泉文化園區", map: "八千代座" },
                     { time: "14:30", act: "鞠智城遺跡", map: "鞠智城" },
-                    { time: "16:30", act: "熊本城、城彩苑", map: "熊本城" },
+                    { time: "16:30", act: "熊本城、城彩苑", map: "熊本城",
+                      info: "熊本城由加藤清正建造，與大阪城、名古屋城並列日本三大名城。以難以攻破的「武者返」石牆聞名。雖然2016年地震受損，但天守閣已修復並開放。",
+                      infoImg: "info_castle.jpg"
+                    },
                     { time: "18:00", act: "下通商店街購物", map: "熊本下通商店街" }
                 ]
             },
             {
                 day: "Day 6", date: "2/25 (三)", title: "再見九州",
                 desc: "帶著滿滿的回憶返回溫暖的家。",
+                tags: ["必買：福岡明太子", "必買：筑紫麻糬", "必買：福砂屋蜂蜜蛋糕"],
+                tip: "熊本機場雖然不大，但國際線航廈也有免稅店。請預留 2 小時以上抵達機場辦理登機。",
                 imgBase: "6", icon: "fa-plane-departure", city: "Kumamoto", cityName: "熊本 Kumamoto",
                 timeline: [
                     { time: "09:00", act: "前往熊本機場", map: "阿蘇熊本機場" },
@@ -153,20 +392,24 @@
 
         const sidebar = document.getElementById('sidebar');
         const headerArea = document.getElementById('header-area');
+        const infoArea = document.getElementById('info-area');
         const timelineList = document.getElementById('timeline-list');
         const bgLayer = document.getElementById('bg-layer');
         const weatherTitle = document.getElementById('weather-loc-name');
         const forecastContainer = document.getElementById('forecast-list');
 
+        // Modal Elements
+        const modal = document.getElementById('modal');
+        const modalImg = document.getElementById('modal-img');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDesc = document.getElementById('modal-desc');
+
         function updateCountdown() {
-            // ★★★ 設定為 2026 年 ★★★
             const tripStartDate = new Date("2026/02/20 00:00:00").getTime();
             const tripEndDate = new Date("2026/02/25 23:59:59").getTime(); 
             const now = new Date().getTime();
-            
             const distance = tripStartDate - now;
             const days = Math.ceil(distance / (1000 * 60 * 60 * 24));
-            
             const box = document.getElementById('countdown');
 
             if (now < tripStartDate) {
@@ -191,6 +434,29 @@
             loadDay(0);
         }
 
+        // ★★★ 開啟 Modal 函式 ★★★
+        // 傳入 dayIndex (哪一天) 和 timeIndex (哪一個行程)
+        window.openInfo = function(dayIndex, timeIndex) {
+            const data = tripData[dayIndex].timeline[timeIndex];
+            if(data) {
+                modalTitle.innerText = data.act;
+                modalDesc.innerText = data.info || "暫無介紹";
+                // 如果有圖片就顯示，沒有就用預設
+                modalImg.src = data.infoImg ? data.infoImg : ""; 
+                modal.classList.add('show');
+            }
+        }
+
+        // 關閉 Modal
+        window.closeModal = function() {
+            modal.classList.remove('show');
+        }
+
+        // 點擊背景關閉
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) closeModal();
+        });
+
         function loadDay(index) {
             const data = tripData[index];
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -205,19 +471,33 @@
 
             headerArea.innerHTML = `<span class="day-badge">${data.day} • ${data.date}</span><h2 class="page-title">${data.title}</h2><p class="page-desc">${data.desc}</p>`;
 
+            let tagsHtml = data.tags.map(tag => `<span class="tag"><i class="fas fa-thumbs-up"></i> ${tag}</span>`).join('');
+            let tipHtml = `<div class="tip-box"><span class="tip-title"><i class="fas fa-lightbulb"></i> 導遊小撇步：</span>${data.tip}</div>`;
+            infoArea.innerHTML = `<div class="tags-container">${tagsHtml}</div>${tipHtml}`;
+
             let html = '';
-            data.timeline.forEach(t => {
-                let mapBtn = '';
+            data.timeline.forEach((t, tIndex) => {
+                let btns = '<div class="btn-group">';
+                
+                // 導航按鈕
                 if(t.map) {
-                    mapBtn = `<a href="https://www.google.com/maps/search/?api=1&query=${t.map}" target="_blank" class="map-btn"><i class="fas fa-location-arrow"></i> 導航</a>`;
+                    btns += `<a href="https://www.google.com/maps/search/?api=1&query=${t.map}" target="_blank" class="action-btn map-btn"><i class="fas fa-location-arrow"></i> 導航</a>`;
                 }
+                
+                // ★ 新增：介紹按鈕 (呼叫 openInfo) ★
+                // 只有當這個行程有 info 資料時，才顯示按鈕
+                if(t.info) {
+                    btns += `<button onclick="openInfo(${index}, ${tIndex})" class="action-btn info-btn"><i class="fas fa-book-open"></i> 介紹</button>`;
+                }
+                
+                btns += '</div>';
                 
                 html += `
                     <li class="timeline-item">
                         <span class="tl-time">${t.time}</span>
                         <div class="tl-content">
                             <span class="tl-act">${t.act}</span>
-                            ${mapBtn}
+                            ${btns}
                         </div>
                     </li>`;
             });
