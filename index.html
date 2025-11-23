@@ -42,51 +42,40 @@
             overflow: hidden;
         }
 
-        /* ========== 左側導覽列 (三段式佈局) ========== */
+        /* 左側導覽列 */
         .sidebar {
             width: 90px;
             background: #161b22;
             border-right: 1px solid rgba(255,255,255,0.1);
             display: flex;
-            flex-direction: column; /* 垂直排列 */
-            height: 100vh;          /* 佔滿高度 */
+            flex-direction: column;
+            overflow-y: auto;
             z-index: 10;
             flex-shrink: 0;
+            padding-bottom: 20px;
         }
 
-        /* 1. 頂部固定區 */
         .sidebar-header {
-            padding: 15px 5px;
+            padding: 20px 0;
             text-align: center;
             border-bottom: 1px solid rgba(255,255,255,0.05);
-            flex-shrink: 0; /* 不會被壓縮 */
-            background: #161b22;
         }
-        .sidebar-header h1 { font-size: 0.8rem; color: var(--gold); margin: 0; letter-spacing: 1px; line-height: 1.4; }
+        .sidebar-header h1 { font-size: 0.85rem; color: var(--gold); margin: 0; letter-spacing: 1px; line-height: 1.4; }
 
         .countdown-box {
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             color: #aaa;
             text-align: center;
             margin-top: 8px;
             background: rgba(255,255,255,0.05);
-            padding: 3px 0;
+            padding: 4px 0;
             border-radius: 4px;
+            margin: 10px 5px;
         }
-        .cnt-num { color: var(--gold); font-weight: bold; font-size: 0.85rem; }
-
-        /* 2. 中間捲動區 (Day 1-6) */
-        .nav-scroll-area {
-            flex: 1; /* 佔用剩餘空間 */
-            overflow-y: auto; /* 內容太多時這裡會有捲軸 */
-            padding-top: 5px;
-            /* 隱藏捲軸但保留功能 */
-            scrollbar-width: none; 
-        }
-        .nav-scroll-area::-webkit-scrollbar { display: none; }
+        .cnt-num { color: var(--gold); font-weight: bold; font-size: 0.9rem; }
 
         .nav-btn {
-            padding: 15px 2px; /*稍微縮小間距*/
+            padding: 20px 5px;
             background: transparent;
             border: none;
             color: var(--text-sub);
@@ -95,26 +84,25 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
             border-left: 3px solid transparent;
             width: 100%;
         }
 
-        .nav-btn i { font-size: 1.1rem; }
-        .nav-btn span { font-size: 0.7rem; font-weight: 500; }
-        .nav-btn .date-tag { font-size: 0.55rem; opacity: 0.6; }
+        .nav-btn i { font-size: 1.2rem; }
+        .nav-btn span { font-size: 0.75rem; font-weight: 500; }
+        .nav-btn .date-tag { font-size: 0.6rem; opacity: 0.6; }
         .nav-btn.active { background: rgba(224, 192, 151, 0.1); color: var(--gold); border-left-color: var(--gold); }
 
-        /* 3. 底部固定區 (工具) */
+        /* 工具按鈕區 */
         .tool-btn-group {
-            flex-shrink: 0; /* 固定底部 */
+            margin-top: auto;
             border-top: 1px solid rgba(255,255,255,0.1);
-            background: #161b22;
-            padding-bottom: env(safe-area-inset-bottom); /* 避開 iPhone 底部橫條 */
+            padding-top: 10px;
         }
         #btn-sos.active { background: rgba(231, 76, 60, 0.15); color: #e74c3c; border-left-color: #e74c3c; }
 
-        /* ========== 右側主畫面 ========== */
+        /* 右側主畫面 */
         .main-content {
             flex: 1;
             position: relative;
@@ -142,6 +130,7 @@
             padding-bottom: 100px;
         }
 
+        /* 頁面樣式 */
         .page-header { margin-bottom: 25px; animation: slideDown 0.5s ease; }
         .day-badge { background: var(--gold); color: #111; padding: 4px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: 700; }
         .page-title { font-size: 2rem; margin: 10px 0 5px; text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
@@ -169,14 +158,21 @@
 
         .btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px;}
         .action-btn { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; text-decoration: none; width: fit-content; transition: 0.2s; cursor: pointer; font-weight: 500; }
+        
         .map-btn { background: rgba(52, 152, 219, 0.15); color: #5dade2; border: 1px solid rgba(52, 152, 219, 0.3); }
         .map-btn:hover { background: #3498db; color: #fff; border-color: #3498db; }
+        
         .link-btn { background: rgba(46, 204, 113, 0.15); color: #58d68d; border: 1px solid rgba(46, 204, 113, 0.3); }
         .link-btn:hover { background: #2ecc71; color: #fff; border-color: #2ecc71; }
+        
         .info-btn { background: rgba(230, 126, 34, 0.15); color: #f39c12; border: 1px solid rgba(230, 126, 34, 0.3); }
         .info-btn:hover { background: #e67e22; color: #fff; border-color: #e67e22; }
 
-        /* 記帳樣式 */
+        /* 新增：紫色憑證按鈕 */
+        .ticket-btn { background: rgba(155, 89, 182, 0.15); color: #af7ac5; border: 1px solid rgba(155, 89, 182, 0.3); }
+        .ticket-btn:hover { background: #9b59b6; color: #fff; border-color: #9b59b6; }
+
+        /* ========== 記帳樣式 ========== */
         .budget-container { max-width: 600px; animation: fadeIn 0.5s ease; }
         .total-card { background: linear-gradient(135deg, #b7950b, #d4af37); padding: 20px; border-radius: 16px; text-align: center; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3); }
         .total-label { font-size: 0.9rem; color: rgba(0,0,0,0.6); font-weight: bold; }
@@ -232,26 +228,22 @@
 </head>
 <body>
     <nav class="sidebar" id="sidebar">
-        <!-- 1. 固定頂部：標題與倒數 -->
         <div class="sidebar-header">
             <h1>家族蛋生2026<br>新春旅遊</h1>
             <div class="countdown-box" id="countdown">
                 距離出發<br><span class="cnt-num" id="days-left">0</span> 天
             </div>
         </div>
+        <!-- JS 會在這裡插入 Day 1-6 按鈕 -->
         
-        <!-- 2. 滾動區域：行程按鈕 (Day 1-6) -->
-        <div class="nav-scroll-area" id="nav-list">
-            <!-- JS 會自動在這裡產生按鈕 -->
-        </div>
-        
-        <!-- 3. 固定底部：工具按鈕 -->
         <div class="tool-btn-group">
+            <!-- 緊急求助按鈕 -->
             <button class="nav-btn" id="btn-sos" onclick="loadEmergency()">
                 <i class="fas fa-first-aid"></i>
                 <span>緊急求助</span>
                 <span class="date-tag">SOS</span>
             </button>
+            <!-- 記帳按鈕 -->
             <button class="nav-btn" id="btn-budget" onclick="loadBudget()">
                 <i class="fas fa-wallet"></i>
                 <span>記帳助手</span>
@@ -262,9 +254,14 @@
 
     <main class="main-content">
         <div id="bg-layer" class="bg-image-layer"></div>
-        <div class="content-overlay" id="main-container"></div>
+        
+        <!-- 內容區 -->
+        <div class="content-overlay" id="main-container">
+            <!-- 動態載入 -->
+        </div>
     </main>
 
+    <!-- 彈出視窗 -->
     <div class="modal-overlay" id="modal">
         <div class="modal-card">
             <div class="modal-img-container">
@@ -290,12 +287,16 @@
                 tip: "福岡屋台大多「只收現金」，請準備好零錢。機場搭地鐵到博多站只要 5 分鐘，非常方便！",
                 imgBase: "1", icon: "fa-plane", city: "Fukuoka", cityName: "福岡 Fukuoka",
                 timeline: [
-                    { time: "15:25", act: "高雄起飛 (虎航 IT270)", map: "高雄小港機場", link: "https://www.tigerairtw.com/zh-tw" },
+                    { 
+                        time: "15:25", act: "高雄起飛 (虎航 IT270)", 
+                        map: "高雄小港機場", link: "https://www.tigerairtw.com/zh-tw",
+                        booking: "<strong>🛫 去程航班 (IT270)</strong><br>時間：15:25 KHH -> 18:55 FUK<br>航空公司：台灣虎航" 
+                    },
                     { time: "18:55", act: "抵達福岡機場", map: "福岡機場", link: "https://www.fukuoka-airport.jp/tw/" },
                     { time: "20:30", act: "民宿 Check-in", map: "博多站", link: "" }, 
                     { 
                         time: "21:00", act: "中洲屋台美食體驗", map: "中洲屋台", link: "https://yokanavi.com/zh-tw/feature/29/",
-                        info: "福岡的屋台（路邊攤）是日本極少數保留下來的飲食文化。中洲川端沿著河畔排列著數十家屋台，氣氛極佳。",
+                        info: "福岡的屋台（路邊攤）是日本極少數保留下來的飲食文化。中洲川端沿著河畔排列著數十家屋台，氣氛極佳。推薦品嚐博多豚骨拉麵、明太子玉子燒和熱騰騰的關東煮。",
                         infoImg: "info_yatai.jpg" 
                     }
                 ]
@@ -309,14 +310,16 @@
                 timeline: [
                     { time: "08:03", act: "博多站出發 → 門司港", map: "博多站", link: "" },
                     { 
-                        time: "09:00", act: "唐戶市場吃海鮮", map: "唐戶市場", link: "https://www.karatoichiba.com/",
-                        info: "唐戶市場位於下關，與門司港隔海相望。週末會變身為熱鬧的海鮮市集，遊客可以直接買新鮮的河豚生魚片。",
+                        time: "09:00", act: "唐戶市場吃海鮮", map: "唐戶市場", 
+                        link: "https://www.karatoichiba.com/",
+                        info: "唐戶市場位於下關，與門司港隔海相望。週末會變身為熱鬧的海鮮市集，遊客可以直接買新鮮的河豚生魚片、握壽司在海邊享用。",
                         infoImg: "info_karato.jpg"
                     },
                     { time: "12:20", act: "午餐：門司港燒咖哩", map: "門司港 燒咖哩", link: "" },
                     { 
-                        time: "15:32", act: "宮地嶽神社 (光之道)", map: "宮地嶽神社", link: "https://www.miyajidake.or.jp/",
-                        info: "宮地嶽神社最著名的就是「光之道」，每年2月與10月，夕陽會剛好落在參道盡頭的海面上，形成一條金黃色的光輝大道。",
+                        time: "15:32", act: "宮地嶽神社 (光之道)", map: "宮地嶽神社", 
+                        link: "https://www.miyajidake.or.jp/",
+                        info: "宮地嶽神社最著名的就是「光之道」，每年2月與10月，夕陽會剛好落在參道盡頭的海面上，形成一條金黃色的光輝大道。此外，這裡還有全日本第一大的注連繩。",
                         infoImg: "info_miyaji.jpg"
                     },
                     { time: "19:00", act: "返回博多市區", map: "博多站", link: "" }
@@ -329,17 +332,21 @@
                 tip: "黑川溫泉位於深山，夜晚氣溫較低。若要泡多家溫泉，建議購買「入湯手形」。",
                 imgBase: "3", icon: "fa-car", city: "Yufu", cityName: "由布院/黑川",
                 timeline: [
-                    { time: "09:00", act: "取車自駕出發", map: "博多租車", link: "" },
+                    { 
+                        time: "09:00", act: "取車自駕出發", map: "博多租車", link: "",
+                        booking: "<strong>🚗 租車預約單 (Tabirai)</strong><br>預約號碼：140753607<br>租車公司：Budget租車公司<br>車型：【禁煙車】FREED同等級(M)<br>------------------------------<br><strong>📍 取車 (博多)</strong><br>時間：2026/2/22 (日) 9:00<br>地點：博多站筑紫口店<br>電話：092-461-8255<br>地址：福岡縣福岡市博多區博多駅東1丁目18-10<br>預約者：LEE CHAO CHUN"
+                    },
                     { time: "10:20", act: "久留米採草莓", map: "久留米 草莓園", link: "" },
                     { 
-                        time: "12:30", act: "由布院散策、金鱗湖", map: "金鱗湖", link: "https://www.city.yufu.oita.jp/",
-                        info: "由布院是九州最受歡迎的溫泉勝地之一，街道充滿歐風與日式混合的文青感。",
+                        time: "12:30", act: "由布院散策、金鱗湖", map: "金鱗湖", 
+                        link: "https://www.city.yufu.oita.jp/",
+                        info: "由布院是九州最受歡迎的溫泉勝地之一，街道充滿歐風與日式混合的文青感。金鱗湖在秋冬的清晨會因為溫泉水氣而產生夢幻的晨霧。",
                         infoImg: "info_yufu.jpg"
                     },
                     { time: "15:00", act: "前往黑川溫泉", map: "黑川溫泉", link: "https://www.kurokawaonsen.or.jp/" },
                     { 
                         time: "16:30", act: "溫泉旅館一泊二食", map: "黑川溫泉旅館",
-                        info: "黑川溫泉以「露天風呂」聞名全日本。這裡保持了古色古香的江戶風情，沒有大型霓虹招牌。",
+                        info: "黑川溫泉以「露天風呂」聞名全日本。這裡保持了古色古香的江戶風情，沒有大型霓虹招牌。使用「入湯手形」可以任選三間旅館的露天溫泉體驗。",
                         infoImg: "info_kurokawa.jpg"
                     }
                 ]
@@ -352,14 +359,16 @@
                 imgBase: "4", icon: "fa-mountain", city: "Aso", cityName: "阿蘇 Aso",
                 timeline: [
                     { 
-                        time: "10:00", act: "阿蘇山觀光 (大觀峰)", map: "阿蘇大觀峰", link: "http://www.aso.ne.jp/~volcano/",
-                        info: "阿蘇山擁有全世界最大的破火山口之一。在大觀峰可以360度俯瞰阿蘇五岳以及廣闊的破火山口平原。",
+                        time: "10:00", act: "阿蘇山觀光 (大觀峰)", map: "阿蘇大觀峰", 
+                        link: "http://www.aso.ne.jp/~volcano/",
+                        info: "阿蘇山擁有全世界最大的破火山口之一。在大觀峰可以360度俯瞰阿蘇五岳（像一尊臥佛）以及廣闊的破火山口平原，景色極為壯觀。",
                         infoImg: "info_aso.jpg"
                     },
                     { time: "11:30", act: "火山口參觀", map: "阿蘇中岳火山口", link: "" },
                     { 
-                        time: "14:30", act: "高千穗峽散策 (參觀真名井瀑布)", map: "高千穗峽", link: "https://takachiho-kanko.info/",
-                        info: "高千穗峽是由阿蘇火山熔岩冷卻後被五瀨川侵蝕而成的柱狀節理峽谷。沿著峽谷步道散步，可以欣賞到著名的真名井瀑布。",
+                        time: "14:30", act: "高千穗峽散策 (參觀真名井瀑布)", map: "高千穗峽", 
+                        link: "https://takachiho-kanko.info/",
+                        info: "高千穗峽是由阿蘇火山熔岩冷卻後被五瀨川侵蝕而成的柱狀節理峽谷。沿著峽谷步道散步，可以欣賞到著名的真名井瀑布從上方飛瀉而下，如同進入神話世界。",
                         infoImg: "info_takachiho.jpg"
                     },
                     { time: "20:00", act: "高千穗神社 夜神樂", map: "高千穗神社", link: "" }
@@ -375,11 +384,15 @@
                     { time: "10:00", act: "山鹿溫泉文化園區", map: "八千代座", link: "https://yamaga-tanbou.jp/" },
                     { time: "14:30", act: "鞠智城遺跡", map: "鞠智城", link: "" },
                     { 
-                        time: "16:30", act: "熊本城、城彩苑", map: "熊本城", link: "https://castle.kumamoto-guide.jp/",
-                        info: "熊本城是日本三大名城之一，由名將加藤清正建造。以易守難攻的「武者返」石牆聞名。",
+                        time: "16:30", act: "熊本城、城彩苑", map: "熊本城", 
+                        link: "https://castle.kumamoto-guide.jp/",
+                        info: "熊本城是日本三大名城之一，由名將加藤清正建造。以易守難攻的「武者返」石牆聞名。雖然2016年地震受損，但天守閣已經完全修復並開放參觀。",
                         infoImg: "info_castle.jpg"
                     },
-                    { time: "18:00", act: "下通商店街購物", map: "熊本下通商店街", link: "" }
+                    { 
+                        time: "18:00", act: "下通商店街購物 (還車)", map: "熊本下通商店街", link: "",
+                        booking: "<strong>🚗 還車 (熊本)</strong><br>時間：2026/2/24 (二) 19:00<br>地點：熊本站前<br>電話：096-312-0543<br>地址：熊本縣熊本市西區春日3丁目13-6<br>請記得加滿油再還車！"
+                    }
                 ]
             },
             {
@@ -390,14 +403,16 @@
                 imgBase: "6", icon: "fa-plane-departure", city: "Kumamoto", cityName: "熊本 Kumamoto",
                 timeline: [
                     { time: "09:00", act: "前往熊本機場", map: "阿蘇熊本機場", link: "https://www.kumamoto-airport.co.jp/" },
-                    { time: "11:55", act: "華航 CI199 起飛", map: "", link: "" },
+                    { 
+                        time: "11:55", act: "華航 CI199 起飛", map: "", link: "",
+                        booking: "<strong>🛫 回程航班 (CI199)</strong><br>時間：11:55 KMJ -> 13:40 KHH<br>航空公司：中華航空"
+                    },
                     { time: "13:40", act: "抵達高雄", map: "", link: "" }
                 ]
             }
         ];
 
         const sidebar = document.getElementById('sidebar');
-        const navList = document.getElementById('nav-list'); // 中間捲動區
         const mainContainer = document.getElementById('main-container');
         const bgLayer = document.getElementById('bg-layer');
         
@@ -433,24 +448,37 @@
 
         function init() {
             updateCountdown();
-            // 插入 Day 按鈕到中間捲動區
+            const refNode = document.querySelector('.tool-btn-group');
             tripData.forEach((item, index) => {
                 const btn = document.createElement('button');
                 btn.className = 'nav-btn';
                 btn.id = `btn-${index}`;
                 btn.innerHTML = `<i class="fas ${item.icon}"></i><span>${item.day}</span><span class="date-tag">${item.date.split(' ')[0]}</span>`;
                 btn.onclick = () => loadDay(index);
-                navList.appendChild(btn);
+                sidebar.insertBefore(btn, refNode);
             });
             loadDay(0);
         }
 
+        // 開啟介紹 (Info)
         window.openInfo = function(dayIndex, timeIndex) {
             const data = tripData[dayIndex].timeline[timeIndex];
             if(data) {
                 modalTitle.innerText = data.act;
                 modalDesc.innerText = data.info || "暫無介紹";
+                modalImg.style.display = "block"; // 顯示圖片區
                 modalImg.src = data.infoImg ? data.infoImg : "https://via.placeholder.com/800x400/333/fff?text=No+Image";
+                modal.classList.add('show');
+            }
+        }
+
+        // 開啟憑證 (Booking)
+        window.openBooking = function(dayIndex, timeIndex) {
+            const data = tripData[dayIndex].timeline[timeIndex];
+            if(data && data.booking) {
+                modalTitle.innerText = "預約 / 航班資訊";
+                modalDesc.innerHTML = data.booking; // 使用 innerHTML 支援 <br>
+                modalImg.style.display = "none"; // 憑證不需要大圖，隱藏圖片區
                 modal.classList.add('show');
             }
         }
@@ -478,10 +506,21 @@
             let timelineHtml = '';
             data.timeline.forEach((t, tIndex) => {
                 let btns = '<div class="btn-group">';
-                if(t.map) btns += `<a href="https://www.google.com/maps/search/?api=1&query=${t.map}" target="_blank" class="action-btn map-btn"><i class="fas fa-location-arrow"></i> 導航</a>`;
-                if(t.link) btns += `<a href="${t.link}" target="_blank" class="action-btn link-btn"><i class="fas fa-external-link-alt"></i> 官網</a>`;
-                if(t.info) btns += `<button onclick="openInfo(${index}, ${tIndex})" class="action-btn info-btn"><i class="fas fa-book-open"></i> 介紹</button>`;
+                if(t.map && t.map !== "") {
+                    btns += `<a href="https://www.google.com/maps/search/?api=1&query=${t.map}" target="_blank" class="action-btn map-btn"><i class="fas fa-location-arrow"></i> 導航</a>`;
+                }
+                if(t.link && t.link !== "") {
+                    btns += `<a href="${t.link}" target="_blank" class="action-btn link-btn"><i class="fas fa-external-link-alt"></i> 官網</a>`;
+                }
+                if(t.info && t.info !== "") {
+                    btns += `<button onclick="openInfo(${index}, ${tIndex})" class="action-btn info-btn"><i class="fas fa-book-open"></i> 介紹</button>`;
+                }
+                // ★ 新增憑證按鈕 ★
+                if(t.booking) {
+                    btns += `<button onclick="openBooking(${index}, ${tIndex})" class="action-btn ticket-btn"><i class="fas fa-ticket-alt"></i> 憑證</button>`;
+                }
                 btns += '</div>';
+                
                 timelineHtml += `<li class="timeline-item"><span class="tl-time">${t.time}</span><div class="tl-content"><span class="tl-act">${t.act}</span>${btns}</div></li>`;
             });
 
@@ -519,30 +558,10 @@
                         <h2 class="page-title" style="color:#e74c3c"><i class="fas fa-first-aid"></i> 緊急求助</h2>
                         <p class="page-desc">遇到緊急狀況請保持冷靜，點擊按鈕即可直接撥號。</p>
                     </div>
-                    
-                    <div class="sos-card">
-                        <div class="sos-info"><h3>警察局</h3><p>遇到犯罪、事故、遺失物品</p></div>
-                        <a href="tel:110" class="sos-call-btn"><i class="fas fa-phone-alt"></i> 110</a>
-                    </div>
-
-                    <div class="sos-card">
-                        <div class="sos-info"><h3>救護車 / 消防隊</h3><p>受傷、急病、火災</p></div>
-                        <a href="tel:119" class="sos-call-btn"><i class="fas fa-phone-alt"></i> 119</a>
-                    </div>
-
-                    <div class="sos-card" style="background:rgba(52, 152, 219, 0.1); border-color:#3498db;">
-                        <div class="sos-info">
-                            <h3 style="color:#3498db">台灣駐福岡辦事處</h3>
-                            <p>護照遺失、急難救助<br>福岡市博多區博多駅前2-5-55</p>
-                        </div>
-                        <a href="tel:+81924736655" class="sos-call-btn" style="background:#3498db;"><i class="fas fa-phone-alt"></i> 撥打</a>
-                    </div>
-
-                    <div class="tip-box" style="margin-top:20px;">
-                        <span class="tip-title">💡 備註：</span>
-                        若在深夜或假日遇到緊急狀況，請撥打福岡辦事處緊急聯絡手機：<br>
-                        <a href="tel:+819087653410" style="color:#f39c12; font-weight:bold; text-decoration:none;">+81-90-8765-3410</a>
-                    </div>
+                    <div class="sos-card"><div class="sos-info"><h3>警察局</h3><p>遇到犯罪、事故、遺失物品</p></div><a href="tel:110" class="sos-call-btn"><i class="fas fa-phone-alt"></i> 110</a></div>
+                    <div class="sos-card"><div class="sos-info"><h3>救護車 / 消防隊</h3><p>受傷、急病、火災</p></div><a href="tel:119" class="sos-call-btn"><i class="fas fa-phone-alt"></i> 119</a></div>
+                    <div class="sos-card" style="background:rgba(52, 152, 219, 0.1); border-color:#3498db;"><div class="sos-info"><h3 style="color:#3498db">台灣駐福岡辦事處</h3><p>護照遺失、急難救助<br>福岡市博多區博多駅前2-5-55</p></div><a href="tel:+81924736655" class="sos-call-btn" style="background:#3498db;"><i class="fas fa-phone-alt"></i> 撥打</a></div>
+                    <div class="tip-box" style="margin-top:20px;"><span class="tip-title">💡 備註：</span>若在深夜或假日遇到緊急狀況，請撥打福岡辦事處緊急聯絡手機：<br><a href="tel:+819087653410" style="color:#f39c12; font-weight:bold; text-decoration:none;">+81-90-8765-3410</a></div>
                 </div>
             `;
         }
@@ -551,33 +570,22 @@
         window.loadBudget = function() {
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-budget').classList.add('active');
-            
             bgLayer.style.opacity = 0;
             setTimeout(() => {
                 bgLayer.style.backgroundImage = `linear-gradient(135deg, #111, #333)`;
                 bgLayer.style.opacity = 0.9;
             }, 200);
-
             renderBudgetUI();
         }
 
-        // 自動匯率換算邏輯
         window.calcTWD = function() {
             const jpy = document.getElementById('bg-price').value;
-            if(jpy) {
-                document.getElementById('bg-twd').value = Math.round(jpy * EXCHANGE_RATE);
-            } else {
-                document.getElementById('bg-twd').value = '';
-            }
+            if(jpy) { document.getElementById('bg-twd').value = Math.round(jpy * EXCHANGE_RATE); } else { document.getElementById('bg-twd').value = ''; }
         }
 
         window.calcJPY = function() {
             const twd = document.getElementById('bg-twd').value;
-            if(twd) {
-                document.getElementById('bg-price').value = Math.round(twd / EXCHANGE_RATE);
-            } else {
-                document.getElementById('bg-price').value = '';
-            }
+            if(twd) { document.getElementById('bg-price').value = Math.round(twd / EXCHANGE_RATE); } else { document.getElementById('bg-price').value = ''; }
         }
 
         function renderBudgetUI() {
@@ -600,60 +608,27 @@
 
             mainContainer.innerHTML = `
                 <div class="budget-container">
-                    <div class="page-header">
-                        <h2 class="page-title"><i class="fas fa-wallet"></i> 記帳助手</h2>
-                        <p class="page-desc">即時匯率換算 (1 JPY ≈ ${EXCHANGE_RATE} TWD)</p>
-                    </div>
-                    
-                    <div class="total-card">
-                        <div class="total-label">目前總花費</div>
-                        <div class="total-amount">NT$ ${totalTWD.toLocaleString()}</div>
-                        <div class="total-unit">約 ¥ ${totalJPY.toLocaleString()}</div>
-                    </div>
-
+                    <div class="page-header"><h2 class="page-title"><i class="fas fa-wallet"></i> 記帳助手</h2><p class="page-desc">即時匯率換算 (1 JPY ≈ ${EXCHANGE_RATE} TWD)</p></div>
+                    <div class="total-card"><div class="total-label">目前總花費</div><div class="total-amount">NT$ ${totalTWD.toLocaleString()}</div><div class="total-unit">約 ¥ ${totalJPY.toLocaleString()}</div></div>
                     <div class="budget-form">
                         <input type="text" id="bg-name" class="budget-input" placeholder="品項 (如: 拉麵)" style="width:100%; margin-bottom:10px;">
-                        
-                        <div class="budget-row">
-                            <input type="number" id="bg-price" class="budget-input" placeholder="日幣 (JPY)" oninput="calcTWD()">
-                            <input type="number" id="bg-twd" class="budget-input" placeholder="台幣 (TWD)" oninput="calcJPY()">
-                        </div>
-
-                        <div class="budget-row" style="margin-top:10px;">
-                            <select id="bg-cat" class="budget-select" style="flex:1;">
-                                <option value="食">🍔 食物</option>
-                                <option value="行">🚌 交通</option>
-                                <option value="購">🛍️ 購物</option>
-                                <option value="住">🏨 住宿</option>
-                                <option value="樂">🎡 娛樂</option>
-                            </select>
-                            <button class="add-btn" onclick="addExpense()" style="flex:1;">新增</button>
-                        </div>
+                        <div class="budget-row"><input type="number" id="bg-price" class="budget-input" placeholder="日幣 (JPY)" oninput="calcTWD()"><input type="number" id="bg-twd" class="budget-input" placeholder="台幣 (TWD)" oninput="calcJPY()"></div>
+                        <div class="budget-row" style="margin-top:10px;"><select id="bg-cat" class="budget-select" style="flex:1;"><option value="食">🍔 食物</option><option value="行">🚌 交通</option><option value="購">🛍️ 購物</option><option value="住">🏨 住宿</option><option value="樂">🎡 娛樂</option></select><button class="add-btn" onclick="addExpense()" style="flex:1;">新增</button></div>
                     </div>
-
                     <ul class="expense-list">${listHtml}</ul>
                 </div>
             `;
         }
 
-        function getIcon(cat) {
-            const map = {'食':'🍔','行':'🚌','購':'🛍️','住':'🏨','樂':'🎡'};
-            return map[cat] || '💰';
-        }
+        function getIcon(cat) { const map = {'食':'🍔','行':'🚌','購':'🛍️','住':'🏨','樂':'🎡'}; return map[cat] || '💰'; }
 
         window.addExpense = function() {
             const name = document.getElementById('bg-name').value;
-            const price = document.getElementById('bg-price').value; // 日幣
-            const twd = document.getElementById('bg-twd').value;     // 台幣
+            const price = document.getElementById('bg-price').value; 
+            const twd = document.getElementById('bg-twd').value;     
             const cat = document.getElementById('bg-cat').value;
-
             if(!name || !price || !twd) return alert("請輸入完整資訊");
-
-            expenses.unshift({ 
-                id: Date.now(), 
-                name, price, twd, cat, 
-                date: new Date().toLocaleDateString() 
-            });
+            expenses.unshift({ id: Date.now(), name, price, twd, cat, date: new Date().toLocaleDateString() });
             localStorage.setItem('tripExpenses', JSON.stringify(expenses));
             renderBudgetUI();
         }
@@ -670,7 +645,6 @@
             const elTitle = document.getElementById('weather-loc-name');
             const elList = document.getElementById('forecast-list');
             if(!elTitle || !elList) return;
-
             elTitle.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${cityName}`;
             elList.innerHTML = `<div style="color:#aaa; font-size:0.8rem; padding:10px;"><i class="fas fa-spinner fa-spin"></i> 讀取中...</div>`;
             try {
