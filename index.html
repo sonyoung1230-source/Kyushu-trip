@@ -246,15 +246,15 @@
         </div>
         
         <div class="tool-btn-group">
-            <button class="nav-btn" id="btn-sos" onclick="loadEmergency()">
-                <i class="fas fa-first-aid"></i>
-                <span>緊急求助</span>
-                <span class="date-tag">SOS</span>
-            </button>
             <button class="nav-btn" id="btn-budget" onclick="loadBudget()">
                 <i class="fas fa-wallet"></i>
                 <span>記帳助手</span>
                 <span class="date-tag">Expense</span>
+            </button>
+            <button class="nav-btn" id="btn-sos" onclick="loadEmergency()">
+                <i class="fas fa-first-aid"></i>
+                <span>緊急求助</span>
+                <span class="date-tag">SOS</span>
             </button>
         </div>
     </nav>
@@ -306,14 +306,15 @@
                     },
                     { time: "18:55", act: "抵達福岡機場", map: "福岡機場", link: "https://www.fukuoka-airport.jp/tw/" },
                     { 
-                        time: "20:30", act: "民宿 Check-in (REQRASサクラマチ)", 
-                        map: "REQRASサクラマチ", 
+                        time: "20:30", act: "民宿 Check-in (Yamasan旁)", 
+                        map: "Yamasan Fukuoka", 
                         link: "", 
-                        booking: "<strong>🏨 住宿憑證</strong><br>名稱：REQRASサクラマチ<br>地址：福岡縣福岡市...<br>Check-in：2026/2/20<br>請記得出示護照辦理入住。"
+                        booking: "<strong>🏨 住宿憑證 (Yamasan)</strong><br>名稱：Yamasan旁<br>地址：請參考地圖導航<br>Check-in：2026/2/20<br>※位置複雜，請參考上方外觀照片。",
+                        bookingImgs: ["v_yamasan.jpg"]
                     }, 
                     { 
                         time: "21:00", act: "中洲屋台美食體驗", map: "中洲屋台", 
-                        link: "", // 移除官網
+                        link: "", 
                         info: "福岡的屋台（路邊攤）是日本極少數保留下來的飲食文化。中洲川端沿著河畔排列著數十家屋台，氣氛極佳。推薦品嚐博多豚骨拉麵、明太子玉子燒和熱騰騰的關東煮。",
                         infoImg: "info_yatai.jpg" 
                     }
@@ -330,11 +331,10 @@
                         time: "08:03", act: "博多站出發 → 門司港", 
                         map: "博多站", 
                         link: "https://www.kanmon-kisen.co.jp/route/kanmon.html", 
-                        // info removed
                     },
                     { 
                         time: "09:00", act: "唐戶市場吃海鮮", map: "唐戶市場", 
-                        link: "", // 移除官網
+                        link: "",
                         info: "唐戶市場位於下關，與門司港隔海相望。週末會變身為熱鬧的海鮮市集，遊客可以直接買新鮮的河豚生魚片、握壽司在海邊享用。",
                         infoImg: "info_karato.jpg"
                     },
@@ -351,8 +351,8 @@
                         infoImg: "info_miyaji.jpg"
                     },
                     { 
-                        time: "19:00", act: "返回博多市區 (宿: REQRASサクラマチ)", 
-                        map: "REQRASサクラマチ", 
+                        time: "19:00", act: "返回博多市區 (宿: Yamasan旁)", 
+                        map: "Yamasan Fukuoka", 
                         link: "" 
                     }
                 ]
@@ -405,7 +405,7 @@
                     },
                     { 
                         time: "10:30", act: "大觀峰景觀檯", map: "大觀峰", 
-                        link: "", // 移除官網
+                        link: "", 
                         info: "阿蘇山擁有全世界最大的破火山口之一。在大觀峰可以360度俯瞰阿蘇五岳（像一尊臥佛）以及廣闊的破火山口平原，景色極為壯觀。",
                         infoImg: "info_aso.jpg"
                     },
@@ -445,7 +445,8 @@
                     { 
                         time: "18:00", act: "熊本市區閒晃 (還車)", map: "バジェット･レンタカー 熊本駅前店", link: "",
                         booking: "<strong>🚗 還車 (熊本)</strong><br>時間：2026/2/24 (二) 19:00<br>地點：Budget租車 熊本站前店<br>日文：バジェット･レンタカー 熊本駅前店<br>電話：096-312-0543<br>地址：熊本縣熊本市西區春日3丁目13-6<br>請記得加滿油再還車！"
-                    }
+                    },
+                    { time: "20:00", act: "返回民宿 (REQRAS)", map: "REQRASサクラマチ", link: "" }
                 ]
             },
             {
