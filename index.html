@@ -168,7 +168,6 @@
         .info-btn { background: rgba(230, 126, 34, 0.15); color: #f39c12; border: 1px solid rgba(230, 126, 34, 0.3); }
         .info-btn:hover { background: #e67e22; color: #fff; border-color: #e67e22; }
 
-        /* 新增：紫色憑證按鈕 */
         .ticket-btn { background: rgba(155, 89, 182, 0.15); color: #af7ac5; border: 1px solid rgba(155, 89, 182, 0.3); }
         .ticket-btn:hover { background: #9b59b6; color: #fff; border-color: #9b59b6; }
 
@@ -208,11 +207,22 @@
         .modal-card { background: var(--modal-bg); width: 100%; max-width: 500px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.15); overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.6); transform: scale(0.9); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-height: 90vh; display: flex; flex-direction: column; }
         .modal-overlay.show .modal-card { transform: scale(1); }
         .modal-img-container { height: 220px; overflow: hidden; position: relative; flex-shrink: 0; background: #000; }
-        .modal-img { width: 100%; height: 100%; object-fit: cover; }
+        .modal-img { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s; }
         .modal-close { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.5); color: #fff; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.3); cursor: pointer; font-size: 1.2rem; z-index: 10; backdrop-filter: blur(4px); }
         .modal-content { padding: 25px; overflow-y: auto; }
         .modal-title { font-size: 1.4rem; color: var(--gold); margin: 0 0 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; line-height: 1.4; }
         .modal-desc { font-size: 1rem; color: #ddd; line-height: 1.8; text-align: justify; white-space: pre-wrap; }
+
+        /* 輪播按鈕 */
+        .slider-nav {
+            position: absolute; top: 50%; width: 100%; display: flex; justify-content: space-between; padding: 0 10px; transform: translateY(-50%); pointer-events: none;
+        }
+        .slider-btn {
+            background: rgba(0,0,0,0.5); color: #fff; border: none; padding: 10px; cursor: pointer; border-radius: 50%; pointer-events: auto; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+        }
+        .slider-counter {
+            position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.6); color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; z-index: 5;
+        }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
@@ -234,16 +244,13 @@
                 距離出發<br><span class="cnt-num" id="days-left">0</span> 天
             </div>
         </div>
-        <!-- JS 會在這裡插入 Day 1-6 按鈕 -->
         
         <div class="tool-btn-group">
-            <!-- 緊急求助按鈕 -->
             <button class="nav-btn" id="btn-sos" onclick="loadEmergency()">
                 <i class="fas fa-first-aid"></i>
                 <span>緊急求助</span>
                 <span class="date-tag">SOS</span>
             </button>
-            <!-- 記帳按鈕 -->
             <button class="nav-btn" id="btn-budget" onclick="loadBudget()">
                 <i class="fas fa-wallet"></i>
                 <span>記帳助手</span>
@@ -254,19 +261,20 @@
 
     <main class="main-content">
         <div id="bg-layer" class="bg-image-layer"></div>
-        
-        <!-- 內容區 -->
-        <div class="content-overlay" id="main-container">
-            <!-- 動態載入 -->
-        </div>
+        <div class="content-overlay" id="main-container"></div>
     </main>
 
     <!-- 彈出視窗 -->
     <div class="modal-overlay" id="modal">
         <div class="modal-card">
-            <div class="modal-img-container">
+            <div class="modal-img-container" id="modal-img-container">
                 <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="slider-counter" id="slider-counter" style="display:none;">1/1</div>
                 <img src="" id="modal-img" class="modal-img">
+                <div class="slider-nav" id="slider-nav" style="display:none;">
+                    <button class="slider-btn" onclick="changeSlide(-1)">&#10094;</button>
+                    <button class="slider-btn" onclick="changeSlide(1)">&#10095;</button>
+                </div>
             </div>
             <div class="modal-content">
                 <h3 class="modal-title" id="modal-title"></h3>
@@ -278,6 +286,10 @@
     <script>
         const apiKey = '8e5674ecc7d8d72c4090fd64fcd2be3d'; 
         const EXCHANGE_RATE = 0.20; 
+
+        // 憑證輪播變數
+        let currentVoucherImgs = [];
+        let currentSlideIdx = 0;
 
         const tripData = [
             {
@@ -293,9 +305,15 @@
                         booking: "<strong>🛫 去程航班 (IT270)</strong><br>時間：15:25 KHH -> 18:55 FUK<br>航空公司：台灣虎航" 
                     },
                     { time: "18:55", act: "抵達福岡機場", map: "福岡機場", link: "https://www.fukuoka-airport.jp/tw/" },
-                    { time: "20:30", act: "民宿 Check-in", map: "博多站", link: "" }, 
                     { 
-                        time: "21:00", act: "中洲屋台美食體驗", map: "中洲屋台", link: "https://yokanavi.com/zh-tw/feature/29/",
+                        time: "20:30", act: "民宿 Check-in (REQRASサクラマチ)", 
+                        map: "REQRASサクラマチ", 
+                        link: "", 
+                        booking: "<strong>🏨 住宿憑證</strong><br>名稱：REQRASサクラマチ<br>地址：福岡縣福岡市...<br>Check-in：2026/2/20<br>請記得出示護照辦理入住。"
+                    }, 
+                    { 
+                        time: "21:00", act: "中洲屋台美食體驗", map: "中洲屋台", 
+                        link: "", // 移除官網
                         info: "福岡的屋台（路邊攤）是日本極少數保留下來的飲食文化。中洲川端沿著河畔排列著數十家屋台，氣氛極佳。推薦品嚐博多豚骨拉麵、明太子玉子燒和熱騰騰的關東煮。",
                         infoImg: "info_yatai.jpg" 
                     }
@@ -308,21 +326,35 @@
                 tip: "唐戶市場只有週末(五六日)有營業「活きいき馬関街」。宮地嶽神社光之道最佳觀賞時間是夕陽時分。",
                 imgBase: "2", icon: "fa-archway", city: "Kitakyushu", cityName: "北九州 Kitakyushu",
                 timeline: [
-                    { time: "08:03", act: "博多站出發 → 門司港", map: "博多站", link: "" },
+                    { 
+                        time: "08:03", act: "博多站出發 → 門司港", 
+                        map: "博多站", 
+                        link: "https://www.kanmon-kisen.co.jp/route/kanmon.html", 
+                        // info removed
+                    },
                     { 
                         time: "09:00", act: "唐戶市場吃海鮮", map: "唐戶市場", 
-                        link: "https://www.karatoichiba.com/",
+                        link: "", // 移除官網
                         info: "唐戶市場位於下關，與門司港隔海相望。週末會變身為熱鬧的海鮮市集，遊客可以直接買新鮮的河豚生魚片、握壽司在海邊享用。",
                         infoImg: "info_karato.jpg"
                     },
                     { time: "12:20", act: "午餐：門司港燒咖哩", map: "門司港 燒咖哩", link: "" },
+                    { 
+                        time: "13:20", act: "關門海峽博物館參訪（樓上喝下午茶）", 
+                        map: "關門海峽博物館", 
+                        link: "" 
+                    },
                     { 
                         time: "15:32", act: "宮地嶽神社 (光之道)", map: "宮地嶽神社", 
                         link: "https://www.miyajidake.or.jp/",
                         info: "宮地嶽神社最著名的就是「光之道」，每年2月與10月，夕陽會剛好落在參道盡頭的海面上，形成一條金黃色的光輝大道。此外，這裡還有全日本第一大的注連繩。",
                         infoImg: "info_miyaji.jpg"
                     },
-                    { time: "19:00", act: "返回博多市區", map: "博多站", link: "" }
+                    { 
+                        time: "19:00", act: "返回博多市區 (宿: REQRASサクラマチ)", 
+                        map: "REQRASサクラマチ", 
+                        link: "" 
+                    }
                 ]
             },
             {
@@ -334,20 +366,29 @@
                 timeline: [
                     { 
                         time: "09:00", act: "取車自駕出發", map: "博多租車", link: "",
-                        booking: "<strong>🚗 租車預約單 (Tabirai)</strong><br>預約號碼：140753607<br>租車公司：Budget租車公司<br>車型：【禁煙車】FREED同等級(M)<br>------------------------------<br><strong>📍 取車 (博多)</strong><br>時間：2026/2/22 (日) 9:00<br>地點：博多站筑紫口店<br>電話：092-461-8255<br>地址：福岡縣福岡市博多區博多駅東1丁目18-10<br>預約者：LEE CHAO CHUN"
+                        booking: "<strong>🚗 租車預約單 (Tabirai)</strong><br>預約號碼：140753607<br>租車公司：Budget租車公司<br>車型：【禁煙車】FREED同等級(M)<br>------------------------------<br><strong>📍 取車 (博多)</strong><br>時間：2026/2/22 (日) 9:00<br>地點：Avis , Budget Car Rental バジェット・レンタカー 博多駅筑紫口店<br>電話：092-461-8255<br>地址：福岡縣福岡市博多區博多駅東1丁目18-10<br>預約者：LEE CHAO CHUN"
                     },
                     { time: "10:20", act: "久留米採草莓", map: "久留米 草莓園", link: "" },
+                    { 
+                        time: "11:00", act: "別府空中纜車 (雨備: 別府地獄溫泉)", 
+                        map: "別府空中纜車", 
+                        link: "" 
+                    },
                     { 
                         time: "12:30", act: "由布院散策、金鱗湖", map: "金鱗湖", 
                         link: "https://www.city.yufu.oita.jp/",
                         info: "由布院是九州最受歡迎的溫泉勝地之一，街道充滿歐風與日式混合的文青感。金鱗湖在秋冬的清晨會因為溫泉水氣而產生夢幻的晨霧。",
                         infoImg: "info_yufu.jpg"
                     },
-                    { time: "15:00", act: "前往黑川溫泉", map: "黑川溫泉", link: "https://www.kurokawaonsen.or.jp/" },
+                    { time: "15:00", act: "前往黑川溫泉", map: "Yukyonohibiki Yusai 湯峡の響き 優彩", link: "https://www.kurokawaonsen.or.jp/" },
                     { 
-                        time: "16:30", act: "溫泉旅館一泊二食", map: "黑川溫泉旅館",
+                        time: "16:30", act: "溫泉旅館一泊二食 (優彩)", 
+                        map: "Yukyonohibiki Yusai 湯峡の響き 優彩",
                         info: "黑川溫泉以「露天風呂」聞名全日本。這裡保持了古色古香的江戶風情，沒有大型霓虹招牌。使用「入湯手形」可以任選三間旅館的露天溫泉體驗。",
-                        infoImg: "info_kurokawa.jpg"
+                        infoImg: "info_kurokawa.jpg",
+                        // ★★★ 這裡設定 4 張憑證圖片 ★★★
+                        booking: "<strong>🏨 湯峡の響き 優彩 (憑證)</strong><br>已為您準備 4 張訂房確認單，請左右滑動上方圖片查看。",
+                        bookingImgs: ["v1.jpg", "v2.jpg", "v3.jpg", "v4.jpg"]
                     }
                 ]
             },
@@ -359,19 +400,23 @@
                 imgBase: "4", icon: "fa-mountain", city: "Aso", cityName: "阿蘇 Aso",
                 timeline: [
                     { 
-                        time: "10:00", act: "阿蘇山觀光 (大觀峰)", map: "阿蘇大觀峰", 
-                        link: "http://www.aso.ne.jp/~volcano/",
+                        time: "10:00", act: "離開民宿 (Check-out)", map: "Yukyonohibiki Yusai 湯峡の響き 優彩", 
+                        link: "",
+                    },
+                    { 
+                        time: "10:30", act: "大觀峰景觀檯", map: "大觀峰", 
+                        link: "", // 移除官網
                         info: "阿蘇山擁有全世界最大的破火山口之一。在大觀峰可以360度俯瞰阿蘇五岳（像一尊臥佛）以及廣闊的破火山口平原，景色極為壯觀。",
                         infoImg: "info_aso.jpg"
                     },
                     { time: "11:30", act: "火山口參觀", map: "阿蘇中岳火山口", link: "" },
                     { 
-                        time: "14:30", act: "高千穗峽散策 (參觀真名井瀑布)", map: "高千穗峽", 
-                        link: "https://takachiho-kanko.info/",
-                        info: "高千穗峽是由阿蘇火山熔岩冷卻後被五瀨川侵蝕而成的柱狀節理峽谷。沿著峽谷步道散步，可以欣賞到著名的真名井瀑布從上方飛瀉而下，如同進入神話世界。",
+                        time: "13:20", act: "搭乘高千穗小火車", map: "高千穂あまてらす鉄道株式会社", 
+                        link: "https://amaterasurailway.jp/",
+                        info: "搭乘小火車穿越高千穗鐵橋，可以從高空俯瞰絕美的峽谷景色。這是由廢棄鐵道改建而成的觀光列車。",
                         infoImg: "info_takachiho.jpg"
                     },
-                    { time: "20:00", act: "高千穗神社 夜神樂", map: "高千穗神社", link: "" }
+                    { time: "20:00", act: "返回民宿 (REQRAS)", map: "REQRASサクラマチ", link: "" }
                 ]
             },
             {
@@ -381,17 +426,23 @@
                 tip: "熊本城範圍很大，且多樓梯與斜坡，請穿好走的鞋子。",
                 imgBase: "5", icon: "fa-landmark", city: "Kumamoto", cityName: "熊本 Kumamoto",
                 timeline: [
-                    { time: "10:00", act: "山鹿溫泉文化園區", map: "八千代座", link: "https://yamaga-tanbou.jp/" },
-                    { time: "14:30", act: "鞠智城遺跡", map: "鞠智城", link: "" },
                     { 
-                        time: "16:30", act: "熊本城、城彩苑", map: "熊本城", 
-                        link: "https://castle.kumamoto-guide.jp/",
-                        info: "熊本城是日本三大名城之一，由名將加藤清正建造。以易守難攻的「武者返」石牆聞名。雖然2016年地震受損，但天守閣已經完全修復並開放參觀。",
+                        time: "10:00", act: "八千代座 (欣賞傳統表演)", map: "八千代座", 
+                        link: "https://yamaga-tanbou.jp/",
+                        info: "八千代座是建於1910年的芝居小屋（傳統劇場），至今仍保留著江戶時代的風貌。欣賞歌舞伎或傳統藝能表演，感受百年前的熱鬧氛圍。",
                         infoImg: "info_castle.jpg"
                     },
                     { 
-                        time: "18:00", act: "下通商店街購物 (還車)", map: "熊本下通商店街", link: "",
-                        booking: "<strong>🚗 還車 (熊本)</strong><br>時間：2026/2/24 (二) 19:00<br>地點：熊本站前<br>電話：096-312-0543<br>地址：熊本縣熊本市西區春日3丁目13-6<br>請記得加滿油再還車！"
+                        time: "12:00", act: "山鹿溫泉文化園區", map: "山鹿溫泉", link: "",
+                        info: "漫步在充滿歷史感的豐前街道，可以參觀「櫻湯」，這是江戶時代的御茶屋改建的溫泉浴場，非常氣派。"
+                    },
+                    { 
+                        time: "15:30", act: "鞠智城遺跡", map: "鞠智城", link: "https://www.kofunkan.pref.kumamoto.jp/",
+                        info: "古代山城的遺跡，標誌性的八角形鼓樓非常特別。這裡視野極佳，可以眺望周邊的平原景色。"
+                    },
+                    { 
+                        time: "18:00", act: "熊本市區閒晃 (還車)", map: "バジェット･レンタカー 熊本駅前店", link: "",
+                        booking: "<strong>🚗 還車 (熊本)</strong><br>時間：2026/2/24 (二) 19:00<br>地點：Budget租車 熊本站前店<br>日文：バジェット･レンタカー 熊本駅前店<br>電話：096-312-0543<br>地址：熊本縣熊本市西區春日3丁目13-6<br>請記得加滿油再還車！"
                     }
                 ]
             },
@@ -421,6 +472,9 @@
         const modalImg = document.getElementById('modal-img');
         const modalTitle = document.getElementById('modal-title');
         const modalDesc = document.getElementById('modal-desc');
+        const sliderNav = document.getElementById('slider-nav');
+        const sliderCounter = document.getElementById('slider-counter');
+        const modalImgContainer = document.getElementById('modal-img-container');
 
         // Budget Data
         let expenses = JSON.parse(localStorage.getItem('tripExpenses')) || [];
@@ -460,27 +514,65 @@
             loadDay(0);
         }
 
-        // 開啟介紹 (Info)
+        // 開啟介紹
         window.openInfo = function(dayIndex, timeIndex) {
             const data = tripData[dayIndex].timeline[timeIndex];
             if(data) {
                 modalTitle.innerText = data.act;
                 modalDesc.innerText = data.info || "暫無介紹";
-                modalImg.style.display = "block"; // 顯示圖片區
+                
+                // 重置圖片區
+                modalImgContainer.style.display = "block";
+                sliderNav.style.display = "none";
+                sliderCounter.style.display = "none";
                 modalImg.src = data.infoImg ? data.infoImg : "https://via.placeholder.com/800x400/333/fff?text=No+Image";
+                
                 modal.classList.add('show');
             }
         }
 
-        // 開啟憑證 (Booking)
+        // 開啟憑證 (支援多張圖片輪播)
         window.openBooking = function(dayIndex, timeIndex) {
             const data = tripData[dayIndex].timeline[timeIndex];
             if(data && data.booking) {
                 modalTitle.innerText = "預約 / 航班資訊";
-                modalDesc.innerHTML = data.booking; // 使用 innerHTML 支援 <br>
-                modalImg.style.display = "none"; // 憑證不需要大圖，隱藏圖片區
+                modalDesc.innerHTML = data.booking;
+                
+                // 檢查是否有憑證圖片
+                if(data.bookingImgs && data.bookingImgs.length > 0) {
+                    currentVoucherImgs = data.bookingImgs;
+                    currentSlideIdx = 0;
+                    modalImgContainer.style.display = "block";
+                    updateSlider();
+                    // 只有多張圖才顯示切換按鈕
+                    if(currentVoucherImgs.length > 1) {
+                        sliderNav.style.display = "flex";
+                        sliderCounter.style.display = "block";
+                    } else {
+                        sliderNav.style.display = "none";
+                        sliderCounter.style.display = "none";
+                    }
+                } else {
+                    modalImgContainer.style.display = "none"; // 沒圖片就隱藏
+                }
                 modal.classList.add('show');
             }
+        }
+
+        window.changeSlide = function(direction) {
+            currentSlideIdx += direction;
+            if (currentSlideIdx >= currentVoucherImgs.length) currentSlideIdx = 0;
+            if (currentSlideIdx < 0) currentSlideIdx = currentVoucherImgs.length - 1;
+            updateSlider();
+        }
+
+        function updateSlider() {
+            modalImg.style.opacity = 0; // 淡出效果
+            setTimeout(() => {
+                modalImg.src = currentVoucherImgs[currentSlideIdx];
+                sliderCounter.innerText = `${currentSlideIdx + 1}/${currentVoucherImgs.length}`;
+                modalImg.style.opacity = 1; // 淡入
+            }, 150);
         }
 
         window.closeModal = function() {
@@ -515,7 +607,6 @@
                 if(t.info && t.info !== "") {
                     btns += `<button onclick="openInfo(${index}, ${tIndex})" class="action-btn info-btn"><i class="fas fa-book-open"></i> 介紹</button>`;
                 }
-                // ★ 新增憑證按鈕 ★
                 if(t.booking) {
                     btns += `<button onclick="openBooking(${index}, ${tIndex})" class="action-btn ticket-btn"><i class="fas fa-ticket-alt"></i> 憑證</button>`;
                 }
@@ -541,11 +632,9 @@
             fetchWeather(data.city, data.cityName);
         }
 
-        // ========== 緊急求助頁面 ==========
         window.loadEmergency = function() {
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-sos').classList.add('active');
-            
             bgLayer.style.opacity = 0;
             setTimeout(() => {
                 bgLayer.style.backgroundImage = `linear-gradient(135deg, #2c0b0e, #521010)`;
@@ -566,7 +655,6 @@
             `;
         }
 
-        // ========== 記帳功能 ==========
         window.loadBudget = function() {
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-budget').classList.add('active');
