@@ -106,9 +106,10 @@
         .main-content {
             flex: 1;
             position: relative;
-            overflow-y: auto;
+            overflow-y: auto; /* 這是控制滾動的地方 */
             background-color: var(--dark-blue);
             background: linear-gradient(135deg, #1e2a38 0%, #0f141a 100%);
+            scroll-behavior: smooth; /* 平滑滾動效果 */
         }
 
         .bg-image-layer {
@@ -308,9 +309,8 @@
                     { 
                         time: "20:30", act: "民宿 Check-in (Yamasan旁)", 
                         map: "Yamasan Fukuoka", 
-                        link: "", 
-                        booking: "<strong>🏨 住宿憑證 (Yamasan)</strong><br>名稱：Yamasan旁<br>地址：請參考地圖導航<br>Check-in：2026/2/20<br>※位置複雜，請參考上方外觀照片。",
-                        bookingImgs: ["v_yamasan.jpg"]
+                        link: ""
+                        // booking removed
                     }, 
                     { 
                         time: "21:00", act: "中洲屋台美食體驗", map: "中洲屋台", 
@@ -331,7 +331,6 @@
                         time: "08:03", act: "博多站出發 → 門司港", 
                         map: "博多站", 
                         link: "https://www.kanmon-kisen.co.jp/route/kanmon.html", 
-                        // info removed
                     },
                     { 
                         time: "09:00", act: "唐戶市場吃海鮮", map: "唐戶市場", 
@@ -355,7 +354,6 @@
                         time: "19:00", act: "返回博多市區 (宿: Yamasan旁)", 
                         map: "Yamasan Fukuoka", 
                         link: "" 
-                        // booking removed
                     }
                 ]
             },
@@ -632,6 +630,9 @@
                 <ul class="timeline" id="timeline-list">${timelineHtml}</ul>
             `;
 
+            // ★ 自動捲動回頂部 ★
+            document.querySelector('.main-content').scrollTop = 0;
+
             fetchWeather(data.city, data.cityName);
         }
 
@@ -656,6 +657,7 @@
                     <div class="tip-box" style="margin-top:20px;"><span class="tip-title">💡 備註：</span>若在深夜或假日遇到緊急狀況，請撥打福岡辦事處緊急聯絡手機：<br><a href="tel:+819087653410" style="color:#f39c12; font-weight:bold; text-decoration:none;">+81-90-8765-3410</a></div>
                 </div>
             `;
+            document.querySelector('.main-content').scrollTop = 0;
         }
 
         window.loadBudget = function() {
@@ -667,6 +669,7 @@
                 bgLayer.style.opacity = 0.9;
             }, 200);
             renderBudgetUI();
+            document.querySelector('.main-content').scrollTop = 0;
         }
 
         window.calcTWD = function() {
